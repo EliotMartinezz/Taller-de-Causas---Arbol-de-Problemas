@@ -164,16 +164,6 @@
           </button>
         </div>
 
-        <div class="flex items-center gap-2 ml-auto">
-          <button onclick="simulateDemoData()" class="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg border border-white/15 transition flex items-center gap-1.5 cursor-pointer">
-            <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
-            <span>Simular Equipo</span>
-          </button>
-          <button onclick="openResetModal()" class="text-xs bg-red-500/20 hover:bg-red-500/35 text-red-100 px-3 py-1.5 rounded-lg border border-red-300/20 transition flex items-center gap-1.5 cursor-pointer">
-            <i class="fa-solid fa-rotate-left"></i>
-            <span>Reiniciar</span>
-          </button>
-        </div>
       </nav>
     </div>
   </header>
@@ -504,28 +494,6 @@
 
   </main>
 
-  <!-- =================================================================== -->
-  <!-- MODAL: REINICIAR DATOS                                              -->
-  <!-- =================================================================== -->
-  <div id="reset-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl animate-fade-in">
-      <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xl mb-3">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-      </div>
-      <h3 class="text-lg font-black text-slate-800">¿Reiniciar el taller a cero?</h3>
-      <p class="text-sm text-slate-600 mt-1">
-        Se borrarán los votos acumulados para iniciar la sesión limpia con el equipo.
-      </p>
-      <div class="mt-5 flex justify-end gap-2">
-        <button onclick="closeResetModal()" class="px-4 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer">
-          Cancelar
-        </button>
-        <button onclick="confirmResetAll()" class="px-4 py-2 text-sm font-bold bg-red-600 hover:bg-red-700 text-white rounded-xl shadow cursor-pointer">
-          Sí, reiniciar
-        </button>
-      </div>
-    </div>
-  </div>
 
   <!-- =================================================================== -->
   <!-- JAVASCRIPT: MOTOR DEL ÁRBOL Y DB NETLIFY POSTGRESQL                 -->
@@ -943,63 +911,6 @@
       renderVotingCards();
       document.getElementById('vote-success-screen').classList.add('hidden');
       document.getElementById('vote-form-container').classList.remove('hidden');
-    }
-
-    function openResetModal() {
-      const m = document.getElementById('reset-modal');
-      m.classList.remove('hidden');
-      m.classList.add('flex');
-    }
-
-    function closeResetModal() {
-      const m = document.getElementById('reset-modal');
-      m.classList.add('hidden');
-      m.classList.remove('flex');
-    }
-
-    function confirmResetAll() {
-      state = {
-        selectedQuote: '',
-        votesList: [],
-        customCausesPool: []
-      };
-      saveLocalState();
-      resetVoteFormForNextPerson();
-      updateAllUI();
-      closeResetModal();
-      showToast('Taller reiniciado desde cero.');
-    }
-
-    function simulateDemoData() {
-      const demoVotes = [
-        { name: 'Camila R.', causes: ['c1', 'c3'], effects: ['e1', 'e3'], quote: 'Imprimimos por si acaso, pero nunca volvemos a mirar esas hojas.' },
-        { name: 'Andrés G.', causes: ['c1', 'c2', 'c3'], effects: ['e1', 'e2'], quote: '' },
-        { name: 'Diana P.', causes: ['c2', 'c4'], effects: ['e1', 'e3', 'e6'], quote: 'Revisar textos largos en papel me cansa menos la vista, pero gasto mucho.' },
-        { name: 'Carlos M.', causes: ['c1', 'c3'], effects: ['e1', 'e5'], quote: '' },
-        { name: 'Juliana T.', causes: ['c1', 'c2'], effects: ['e2', 'e3'], quote: '' },
-        { name: 'Felipe S.', causes: ['c3', 'c5'], effects: ['e1', 'e5'], quote: 'A veces se van 10 hojas mal configuradas y quedan ahí.' },
-        { name: 'Natalia V.', causes: ['c1', 'c2', 'c3'], effects: ['e1', 'e2', 'e3'], quote: '' },
-        { name: 'Jorge L.', causes: ['c1', 'c4'], effects: ['e1', 'e4'], quote: '' },
-        { name: 'Sofía H.', causes: ['c2', 'c3'], effects: ['e1', 'e3'], quote: '' },
-        { name: 'Mateo D.', causes: ['c1', 'c6'], effects: ['e2', 'e3'], quote: '' },
-        { name: 'Valentina C.', causes: ['c1', 'c2', 'c3'], effects: ['e1', 'e3'], quote: '' },
-        { name: 'Luis F.', causes: ['c1', 'c3'], effects: ['e1', 'e2'], quote: '' }
-      ];
-
-      state.votesList = demoVotes.map((d, i) => ({
-        id: 'demo_' + i,
-        name: d.name,
-        causes: d.causes,
-        effects: d.effects,
-        quote: d.quote,
-        ts: Date.now() + i
-      }));
-      state.selectedQuote = demoVotes[0].quote;
-
-      saveLocalState();
-      updateAllUI();
-      switchTab('tree');
-      showToast('Simulación cargada: mira cómo crecieron las hojas y raíces.');
     }
 
     function switchTab(tabName) {
