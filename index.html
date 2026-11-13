@@ -125,15 +125,12 @@
             </span>
             <span class="bg-sky-500/20 border border-sky-300/30 text-sky-200 text-[11px] font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
               <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
-              Netlify DB Activa ($14.300/resma)
+              Netlify DB Activa
             </span>
           </div>
           <h1 class="text-xl sm:text-2xl font-black tracking-tight">
             Taller de Causas: Árbol de Problemas del Papel
           </h1>
-          <p class="text-emerald-100/90 text-xs sm:text-sm mt-0.5">
-            Línea de base: <strong>4–5 resmas/mes</strong> (50–60 hojas/persona) · Tarifa: <strong>$14.300 COP / resma</strong>
-          </p>
         </div>
 
         <!-- Indicadores en tiempo real -->
@@ -151,18 +148,6 @@
             </div>
           </div>
 
-          <!-- Resmas y Costo Calculado Automático ($14.300) -->
-          <div class="bg-amber-400 text-slate-950 rounded-xl px-3.5 py-2 flex items-center gap-2.5 shadow-md">
-            <div class="w-9 h-9 rounded-lg bg-amber-600/20 text-slate-900 flex items-center justify-center">
-              <i class="fa-solid fa-calculator"></i>
-            </div>
-            <div>
-              <div class="text-[10px] uppercase tracking-wider font-extrabold text-slate-800">Costo Estimado (4.5 resmas)</div>
-              <div class="text-base font-black leading-tight">
-                <span id="header-total-cost">$64.350</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -176,10 +161,6 @@
           <button id="tab-btn-tree" onclick="switchTab('tree')" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer text-white/90 hover:bg-white/10">
             <i class="fa-solid fa-tree"></i>
             <span>2. Árbol Gráfico en Vivo</span>
-          </button>
-          <button id="tab-btn-report" onclick="switchTab('report')" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer text-white/90 hover:bg-white/10">
-            <i class="fa-solid fa-clipboard-list"></i>
-            <span>3. Evidencia, ODS y Guía</span>
           </button>
         </div>
 
@@ -352,9 +333,6 @@
             <span class="bg-white border border-slate-200 px-3 py-1 rounded-full font-bold text-slate-700 shadow-2xs">
               <i class="fa-solid fa-users text-forest-600 mr-1"></i> Participantes: <span id="tree-canvas-votes" class="text-forest-700">0</span> / 12
             </span>
-            <span class="bg-amber-50 border border-amber-200 px-3 py-1 rounded-full font-extrabold text-amber-900 shadow-2xs">
-              <i class="fa-solid fa-calculator text-amber-600 mr-1"></i> Costo Est. (<span id="tree-canvas-reams">4.5</span> resmas): <span id="tree-canvas-cost" class="text-amber-800">$64.350</span>
-            </span>
           </div>
         </div>
 
@@ -480,32 +458,23 @@
               <path d="M635,415 Q628,495 640,575" stroke="#492b18" stroke-width="4" fill="none" opacity="0.5" stroke-linecap="round" />
             </g>
 
-            <!-- CARTEL DE MADERA CLAVADO EN EL TRONCO (PROBLEMA CENTRAL + COSTO FIJO $14.300) -->
+            <!-- CARTEL DE MADERA CLAVADO EN EL TRONCO (PROBLEMA CENTRAL) -->
             <g transform="translate(600, 488)" filter="url(#softShadow)">
-              <rect x="-210" y="-66" width="420" height="132" rx="18" fill="#fffbeb" stroke="#78350f" stroke-width="5" />
-              <rect x="-202" y="-58" width="404" height="116" rx="13" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="6,4" />
+              <rect x="-210" y="-44" width="420" height="88" rx="18" fill="#fffbeb" stroke="#78350f" stroke-width="5" />
+              <rect x="-202" y="-36" width="404" height="72" rx="13" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="6,4" />
               
-              <circle cx="-190" cy="-46" r="4.5" fill="#78350f" />
-              <circle cx="190" cy="-46" r="4.5" fill="#78350f" />
-              <circle cx="-190" cy="46" r="4.5" fill="#78350f" />
-              <circle cx="190" cy="46" r="4.5" fill="#78350f" />
+              <circle cx="-190" cy="-24" r="4.5" fill="#78350f" />
+              <circle cx="190" cy="-24" r="4.5" fill="#78350f" />
+              <circle cx="-190" cy="24" r="4.5" fill="#78350f" />
+              <circle cx="190" cy="24" r="4.5" fill="#78350f" />
 
-              <rect x="-95" y="-78" width="190" height="24" rx="12" fill="#92400e" />
-              <text x="0" y="-62" text-anchor="middle" fill="#fef3c7" font-size="11" font-weight="900" letter-spacing="1">
+              <rect x="-95" y="-56" width="190" height="24" rx="12" fill="#92400e" />
+              <text x="0" y="-40" text-anchor="middle" fill="#fef3c7" font-size="11" font-weight="900" letter-spacing="1">
                 PROBLEMA CENTRAL
               </text>
 
-              <text x="0" y="-26" text-anchor="middle" fill="#1e293b" font-size="17" font-weight="900">
+              <text x="0" y="8" text-anchor="middle" fill="#1e293b" font-size="18" font-weight="900">
                 Alto consumo de papel y tóner
-              </text>
-              <text x="0" y="-4" text-anchor="middle" fill="#475569" font-size="13" font-weight="600">
-                Línea de base: 4 a 5 resmas/mes (50–60 hojas/persona)
-              </text>
-
-              <!-- Pastilla de Costo Calculado a $14.300 x resma -->
-              <rect x="-165" y="12" width="330" height="36" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" />
-              <text x="0" y="35" text-anchor="middle" fill="#92400e" font-size="14" font-weight="900" id="svg-trunk-cost-text">
-                Costo est. (4.5 resmas a $14.300): $64.350
               </text>
             </g>
 
@@ -527,144 +496,11 @@
               <strong>Raíces doradas:</strong> Top 3 causas principales
             </span>
           </div>
-          <div class="font-semibold text-slate-500">
-            * Tarifa oficial: <strong class="text-slate-700">$14.300 COP</strong> por resma.
-          </div>
         </div>
       </div>
 
     </section>
 
-    <!-- ================================================================= -->
-    <!-- VISTA 3: RESUMEN DE EVIDENCIA, ODS Y GUÍA                         -->
-    <!-- ================================================================= -->
-    <section id="view-report" class="hidden animate-fade-in space-y-6">
-      
-      <!-- Bloque 1: Ficha de Resultados para entregar -->
-      <div class="bg-white rounded-2xl p-6 shadow-xs border border-slate-200">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-          <div>
-            <span class="text-xs font-extrabold uppercase tracking-wider text-forest-700 bg-forest-100 px-2.5 py-1 rounded-md">
-              Resultados Listos para Entregar
-            </span>
-            <h2 class="text-xl font-black text-slate-800 mt-1">Sistematización del Taller (Semana 3)</h2>
-          </div>
-          <button onclick="copySummaryToClipboard()" class="px-5 py-2.5 bg-forest-600 hover:bg-forest-700 text-white text-sm font-bold rounded-xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
-            <i class="fa-solid fa-copy"></i> Copiar Resultados
-          </button>
-        </div>
-
-        <!-- KPIs -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-5">
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
-            <div class="text-xs font-bold text-slate-500 uppercase">Asistentes Reales</div>
-            <div class="text-2xl font-black text-slate-800 mt-1">
-              <span id="report-votes">0</span> <span class="text-sm font-medium text-slate-500">/ 12 meta (30%)</span>
-            </div>
-            <div id="report-meta-status" class="text-xs font-semibold text-amber-600 mt-1">En progreso</div>
-          </div>
-
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
-            <div class="text-xs font-bold text-slate-500 uppercase">Costo Est. Mensual ($14.300/resma)</div>
-            <div class="text-2xl font-black text-forest-700 mt-1" id="report-total-cost">$64.350</div>
-            <div class="text-xs text-slate-500 mt-1">Basado en promedio 4.5 resmas</div>
-          </div>
-
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
-            <div class="text-xs font-bold text-slate-500 uppercase">Línea de Base</div>
-            <div class="text-lg font-extrabold text-slate-800 mt-1">4 a 5 resmas / mes</div>
-            <div class="text-xs text-slate-500 mt-1">50 a 60 hojas por persona</div>
-          </div>
-        </div>
-
-        <!-- Top 3 Causas y Frases recogidas -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-5">
-            <h3 class="text-base font-extrabold text-amber-950 flex items-center gap-2 mb-3">
-              <i class="fa-solid fa-trophy text-amber-500"></i> Las 3 Causas Principales (Raíces Top)
-            </h3>
-            <ol id="report-top3-list" class="space-y-2.5 text-sm"></ol>
-          </div>
-
-          <div class="bg-sky-50/70 border border-sky-200 rounded-2xl p-5 flex flex-col justify-between">
-            <div>
-              <label for="participant-quote" class="text-base font-extrabold text-slate-800 flex items-center gap-2 mb-1">
-                <i class="fa-solid fa-quote-left text-sky-600"></i> Frase destacada de un participante
-              </label>
-              <p class="text-xs text-slate-600 mb-2">
-                Si los participantes enviaron frases al votar, aparecerán abajo para que elijas o edites la mejor:
-              </p>
-              <textarea id="participant-quote" rows="2" oninput="saveQuote()" placeholder="Escribe o selecciona una frase de un participante..." class="w-full rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-600"></textarea>
-              <div id="submitted-quotes-chips" class="flex flex-wrap gap-1.5 mt-2"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bloque 2: Información de conexión Netlify PostgreSQL -->
-      <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-6 shadow-md">
-        <div class="flex items-center gap-3 pb-3 border-b border-white/10">
-          <div class="w-9 h-9 rounded-xl bg-sky-500/20 text-sky-300 flex items-center justify-center">
-            <i class="fa-solid fa-database"></i>
-          </div>
-          <div>
-            <span class="text-[11px] font-extrabold uppercase tracking-wider text-sky-300">Base de Datos Netlify PostgreSQL (Integrada)</span>
-            <h3 class="text-base font-black">Conexión activa incorporada en el backend serverless</h3>
-          </div>
-        </div>
-        <p class="text-xs text-slate-300 mt-3 leading-relaxed">
-          La aplicación se conecta de forma segura a través de la cadena de conexión Netlify PostgreSQL configurada (<code class="text-sky-300">postgresql://netlifydb_owner:npg_...@ep-empty-mouse-bdrl1xch...</code>) para que los votos de todo el personal se sincronicen en tiempo real sin requerir configuración manual.
-        </p>
-      </div>
-
-      <!-- Bloque 3: Aporte a los ODS -->
-      <div class="bg-white rounded-2xl p-6 shadow-xs border border-slate-200">
-        <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2">
-          <i class="fa-solid fa-earth-americas text-forest-600"></i> Aporte a los Objetivos de Desarrollo Sostenible (ODS)
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="rounded-2xl border border-amber-200 bg-amber-50/40 p-4">
-            <div class="flex items-center gap-3 mb-2">
-              <span class="w-10 h-10 rounded-xl bg-amber-600 text-white font-black flex items-center justify-center shrink-0">12</span>
-              <div>
-                <div class="text-[11px] font-bold uppercase text-amber-700">ODS 12 · Meta 12.5</div>
-                <div class="font-extrabold text-slate-800 text-sm">Producción y consumo responsables</div>
-              </div>
-            </div>
-            <p class="text-xs text-slate-600 leading-relaxed">
-              Hace visible el consumo de papel y apunta a reducir desechos mediante la <strong>prevención</strong> (Naciones Unidas, 2015).
-            </p>
-          </div>
-
-          <div class="rounded-2xl border border-red-200 bg-red-50/40 p-4">
-            <div class="flex items-center gap-3 mb-2">
-              <span class="w-10 h-10 rounded-xl bg-red-700 text-white font-black flex items-center justify-center shrink-0">4</span>
-              <div>
-                <div class="text-[11px] font-bold uppercase text-red-700">ODS 4 · Meta 4.7</div>
-                <div class="font-extrabold text-slate-800 text-sm">Educación de calidad</div>
-              </div>
-            </div>
-            <p class="text-xs text-slate-600 leading-relaxed">
-              El taller es <strong>educación ambiental práctica</strong> para que las personas adquieran conocimientos para el desarrollo sostenible.
-            </p>
-          </div>
-
-          <div class="rounded-2xl border border-forest-200 bg-forest-50/40 p-4">
-            <div class="flex items-center gap-3 mb-2">
-              <span class="w-10 h-10 rounded-xl bg-forest-600 text-white font-black flex items-center justify-center shrink-0">15</span>
-              <div>
-                <div class="text-[11px] font-bold uppercase text-forest-700">ODS 15</div>
-                <div class="font-extrabold text-slate-800 text-sm">Vida de ecosistemas terrestres</div>
-              </div>
-            </div>
-            <p class="text-xs text-slate-600 leading-relaxed">
-              El papel viene de fibra de árboles; imprimir menos alivia la presión sobre los <strong>bosques</strong>.
-            </p>
-          </div>
-        </div>
-      </div>
-
-    </section>
 
   </main>
 
@@ -702,9 +538,6 @@
     };
 
     const STORAGE_KEY = 'taller_arbol_postgresql_v3';
-    const REAM_COST_COP = 14300; // Tarifa fija por resma
-    const BASELINE_REAMS = 4.5; // Promedio de línea de base (4 a 5 resmas/mes)
-
     const bc = ('BroadcastChannel' in window) ? new BroadcastChannel('taller_arbol_pg_channel') : null;
 
     // Catálogo base
@@ -853,14 +686,7 @@
     function renderGraphicalTree() {
       const agg = getAggregatedData();
       const totalVoters = agg.totalVoters;
-      // Cálculo automático del costo basado en $14.300 x resma (usando 4.5 resmas base o escalando por participantes)
-      const estimatedReams = BASELINE_REAMS;
-      const totalCost = Math.round(estimatedReams * REAM_COST_COP);
-
       document.getElementById('tree-canvas-votes').textContent = totalVoters;
-      document.getElementById('tree-canvas-reams').textContent = estimatedReams;
-      document.getElementById('tree-canvas-cost').textContent = formatCurrency(totalCost);
-      document.getElementById('svg-trunk-cost-text').textContent = `Costo est. (${estimatedReams} resmas a $14.300): ${formatCurrency(totalCost)}`;
 
       // 1) HOJAS EN LA COPA
       const leavesLayer = document.getElementById('svg-leaves-layer');
@@ -1119,85 +945,6 @@
       document.getElementById('vote-form-container').classList.remove('hidden');
     }
 
-    function renderReport() {
-      const agg = getAggregatedData();
-      const totalVoters = agg.totalVoters;
-      const totalCost = Math.round(BASELINE_REAMS * REAM_COST_COP);
-
-      document.getElementById('report-votes').textContent = totalVoters;
-      const metaEl = document.getElementById('report-meta-status');
-      if (totalVoters >= 12) {
-        metaEl.textContent = '¡Meta alcanzada! (12 o más participantes)';
-        metaEl.className = 'text-xs font-bold text-forest-600 mt-1';
-      } else {
-        metaEl.textContent = `Faltan ${12 - totalVoters} participantes para la meta de 12`;
-        metaEl.className = 'text-xs font-semibold text-amber-600 mt-1';
-      }
-
-      document.getElementById('report-total-cost').textContent = formatCurrency(totalCost);
-
-      const top3 = [...agg.causes].sort((a, b) => b.votes - a.votes).slice(0, 3);
-      const top3List = document.getElementById('report-top3-list');
-      if (totalVoters === 0) {
-        top3List.innerHTML = `<li class="text-slate-500 italic">Aún no hay votos registrados.</li>`;
-      } else {
-        top3List.innerHTML = top3.map((c, idx) => `
-          <li class="bg-white border border-amber-200 rounded-xl p-3 flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2.5">
-              <span class="w-6 h-6 rounded-full bg-amber-500 text-slate-950 font-black text-xs flex items-center justify-center shrink-0">${idx + 1}</span>
-              <span class="font-bold text-slate-800">${escapeHTML(c.text)}</span>
-            </div>
-            <span class="text-xs font-extrabold text-amber-900 bg-amber-100 px-2.5 py-1 rounded-lg shrink-0">${c.votes} votos</span>
-          </li>
-        `).join('');
-      }
-
-      document.getElementById('participant-quote').value = state.selectedQuote || '';
-      const chipsContainer = document.getElementById('submitted-quotes-chips');
-      chipsContainer.innerHTML = agg.quotes.map(q => `
-        <button type="button" onclick="pickQuote('${escapeAttr(q.text)}')" class="text-[11px] bg-white hover:bg-sky-100 text-slate-700 border border-sky-200 px-2.5 py-1 rounded-lg transition cursor-pointer">
-          "${escapeHTML(truncateText(q.text, 45))}" — <strong>${escapeHTML(q.author)}</strong>
-        </button>
-      `).join('');
-    }
-
-    async function pickQuote(text) {
-      state.selectedQuote = text;
-      document.getElementById('participant-quote').value = text;
-      saveLocalState();
-    }
-
-    async function saveQuote() {
-      state.selectedQuote = document.getElementById('participant-quote').value;
-      saveLocalState();
-    }
-
-    function copySummaryToClipboard() {
-      const agg = getAggregatedData();
-      const totalCost = Math.round(BASELINE_REAMS * REAM_COST_COP);
-      const top3 = [...agg.causes].sort((a, b) => b.votes - a.votes).slice(0, 3);
-      const quote = (state.selectedQuote || '').trim() || '[Pendiente frase de participante]';
-
-      const summary = `ACTIVIDAD 1 · TALLER DE CAUSAS (SEMANA 3)
-Asistentes reales: ${agg.totalVoters} participantes (Meta: 12 / 30% del personal)
-Costo mensual calculado (${BASELINE_REAMS} resmas a $14.300 COP): ${formatCurrency(totalCost)}
-
-3 CAUSAS PRINCIPALES (ÁRBOL DE PROBLEMAS):
-1. ${top3[0]?.text || '-'} (${top3[0]?.votes || 0} votos)
-2. ${top3[1]?.text || '-'} (${top3[1]?.votes || 0} votos)
-3. ${top3[2]?.text || '-'} (${top3[2]?.votes || 0} votos)
-
-Frase destacada: "${quote}"`;
-
-      const ta = document.createElement('textarea');
-      ta.value = summary;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      showToast('¡Resultados copiados al portapapeles!');
-    }
-
     function openResetModal() {
       const m = document.getElementById('reset-modal');
       m.classList.remove('hidden');
@@ -1256,7 +1003,7 @@ Frase destacada: "${quote}"`;
     }
 
     function switchTab(tabName) {
-      ['vote', 'tree', 'report'].forEach(v => {
+      ['vote', 'tree'].forEach(v => {
         const view = document.getElementById(`view-${v}`);
         const btn = document.getElementById(`tab-btn-${v}`);
         if (v === tabName) {
@@ -1270,7 +1017,6 @@ Frase destacada: "${quote}"`;
         }
       });
       if (tabName === 'tree') renderGraphicalTree();
-      if (tabName === 'report') renderReport();
     }
 
     function togglePhotoMode(enable) {
@@ -1285,17 +1031,10 @@ Frase destacada: "${quote}"`;
 
     function updateAllUI() {
       const agg = getAggregatedData();
-      const totalCost = Math.round(BASELINE_REAMS * REAM_COST_COP);
       document.getElementById('header-votes-count').textContent = agg.totalVoters;
-      document.getElementById('header-total-cost').textContent = formatCurrency(totalCost);
 
       renderVotingCards();
       renderGraphicalTree();
-      renderReport();
-    }
-
-    function formatCurrency(val) {
-      return '$' + (Number(val) || 0).toLocaleString('es-CO');
     }
 
     function truncateText(str, max) {
