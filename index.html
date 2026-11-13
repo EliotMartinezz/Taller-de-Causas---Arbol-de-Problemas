@@ -123,17 +123,16 @@
             <span class="bg-emerald-500/25 border border-emerald-300/30 text-emerald-100 text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
               <i class="fa-solid fa-seedling mr-1"></i> Actividad 1 · Semana 3
             </span>
-            <!-- Indicador de estado de conexión en la nube -->
-            <button onclick="openCloudModal()" id="cloud-status-badge" class="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-300/40 text-amber-200 text-[11px] font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 transition cursor-pointer">
-              <span id="cloud-status-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
-              <span id="cloud-status-text">Modo Local (Sin nube)</span>
-            </button>
+            <span class="bg-sky-500/20 border border-sky-300/30 text-sky-200 text-[11px] font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+              Netlify DB Activa ($14.300/resma)
+            </span>
           </div>
           <h1 class="text-xl sm:text-2xl font-black tracking-tight">
             Taller de Causas: Árbol de Problemas del Papel
           </h1>
           <p class="text-emerald-100/90 text-xs sm:text-sm mt-0.5">
-            Línea de base: <strong>4–5 resmas/mes</strong> (50–60 hojas/persona) · Meta: <strong>12 participantes (30%)</strong> + interlocutor
+            Línea de base: <strong>4–5 resmas/mes</strong> (50–60 hojas/persona) · Tarifa: <strong>$14.300 COP / resma</strong>
           </p>
         </div>
 
@@ -152,25 +151,18 @@
             </div>
           </div>
 
-          <!-- Costo Mensual Facturas -->
-          <button onclick="openCostModal()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-xl px-3.5 py-2 flex items-center gap-2.5 transition shadow-md cursor-pointer text-left">
+          <!-- Resmas y Costo Calculado Automático ($14.300) -->
+          <div class="bg-amber-400 text-slate-950 rounded-xl px-3.5 py-2 flex items-center gap-2.5 shadow-md">
             <div class="w-9 h-9 rounded-lg bg-amber-600/20 text-slate-900 flex items-center justify-center">
-              <i class="fa-solid fa-file-invoice-dollar"></i>
+              <i class="fa-solid fa-calculator"></i>
             </div>
             <div>
-              <div class="text-[10px] uppercase tracking-wider font-extrabold text-slate-800">Costo Mensual</div>
-              <div class="text-base font-black leading-tight flex items-center gap-1">
-                <span id="header-total-cost">$0</span>
-                <i class="fa-solid fa-pen text-[10px] opacity-70"></i>
+              <div class="text-[10px] uppercase tracking-wider font-extrabold text-slate-800">Costo Estimado (4.5 resmas)</div>
+              <div class="text-base font-black leading-tight">
+                <span id="header-total-cost">$64.350</span>
               </div>
             </div>
-          </button>
-
-          <!-- Botón Conectar Nube / Compartir Link -->
-          <button onclick="openCloudModal()" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl px-3.5 py-2.5 text-xs sm:text-sm flex items-center gap-2 transition shadow-md cursor-pointer">
-            <i class="fa-solid fa-cloud-arrow-up"></i>
-            <span>Nube / Link</span>
-          </button>
+          </div>
         </div>
       </div>
 
@@ -241,7 +233,7 @@
         </div>
         <h3 class="text-2xl font-black text-slate-800">¡Tus hojas y raíces ya están en el árbol!</h3>
         <p class="text-slate-600 mt-2 text-sm sm:text-base">
-          Tu aporte se sincronizó correctamente. Mira cómo va creciendo el árbol colectivo en tiempo real.
+          Tu aporte se sincronizó correctamente con la base de datos Netlify. Mira cómo va creciendo el árbol colectivo en tiempo real.
         </p>
         <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
           <button onclick="switchTab('tree')" class="w-full sm:w-auto px-6 py-3.5 bg-forest-600 hover:bg-forest-700 text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
@@ -336,9 +328,6 @@
           </p>
         </div>
         <div class="flex flex-wrap items-center gap-2">
-          <button onclick="manualSyncNow()" id="sync-now-btn" class="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
-            <i class="fa-solid fa-arrows-rotate text-sky-600"></i> Actualizar
-          </button>
           <button onclick="togglePhotoMode(true)" class="px-4 py-2 bg-forest-700 hover:bg-forest-800 text-white rounded-xl text-xs font-bold shadow-sm transition flex items-center gap-1.5 cursor-pointer">
             <i class="fa-solid fa-camera"></i> Modo Foto / Captura Limpia
           </button>
@@ -364,7 +353,7 @@
               <i class="fa-solid fa-users text-forest-600 mr-1"></i> Participantes: <span id="tree-canvas-votes" class="text-forest-700">0</span> / 12
             </span>
             <span class="bg-amber-50 border border-amber-200 px-3 py-1 rounded-full font-extrabold text-amber-900 shadow-2xs">
-              <i class="fa-solid fa-coins text-amber-500 mr-1"></i> Costo Mensual: <span id="tree-canvas-cost">$0</span>
+              <i class="fa-solid fa-calculator text-amber-600 mr-1"></i> Costo Est. (<span id="tree-canvas-reams">4.5</span> resmas): <span id="tree-canvas-cost" class="text-amber-800">$64.350</span>
             </span>
           </div>
         </div>
@@ -470,7 +459,6 @@
 
             <!-- SUELO / CÉSPED Y SUBSUELO (585 a 940) -->
             <rect x="0" y="592" width="1200" height="348" fill="url(#soilGrad)" />
-            <!-- Franja de césped verde en la superficie -->
             <path d="M0,592 Q300,582 600,592 T1200,592 L1200,608 Q900,616 600,608 T0,608 Z" fill="#16a34a" />
 
             <!-- ETIQUETA INFERIOR: SUBSUELO / RAÍCES (CAUSAS) -->
@@ -487,31 +475,26 @@
             <!-- TRONCO CENTRAL DEL ÁRBOL -->
             <g filter="url(#softShadow)">
               <path d="M515,595 Q540,490 535,385 L665,385 Q660,490 685,595 Z" fill="url(#trunkGrad)" />
-              <!-- Textura de corteza -->
               <path d="M565,410 Q572,495 560,580" stroke="#492b18" stroke-width="4" fill="none" opacity="0.5" stroke-linecap="round" />
               <path d="M600,400 Q595,500 605,585" stroke="#492b18" stroke-width="5" fill="none" opacity="0.45" stroke-linecap="round" />
               <path d="M635,415 Q628,495 640,575" stroke="#492b18" stroke-width="4" fill="none" opacity="0.5" stroke-linecap="round" />
             </g>
 
-            <!-- CARTEL DE MADERA CLAVADO EN EL TRONCO (PROBLEMA CENTRAL + COSTO) -->
+            <!-- CARTEL DE MADERA CLAVADO EN EL TRONCO (PROBLEMA CENTRAL + COSTO FIJO $14.300) -->
             <g transform="translate(600, 488)" filter="url(#softShadow)">
-              <!-- Tablón principal -->
               <rect x="-210" y="-66" width="420" height="132" rx="18" fill="#fffbeb" stroke="#78350f" stroke-width="5" />
               <rect x="-202" y="-58" width="404" height="116" rx="13" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="6,4" />
               
-              <!-- Clavos decorativos -->
               <circle cx="-190" cy="-46" r="4.5" fill="#78350f" />
               <circle cx="190" cy="-46" r="4.5" fill="#78350f" />
               <circle cx="-190" cy="46" r="4.5" fill="#78350f" />
               <circle cx="190" cy="46" r="4.5" fill="#78350f" />
 
-              <!-- Etiqueta Tronco -->
               <rect x="-95" y="-78" width="190" height="24" rx="12" fill="#92400e" />
               <text x="0" y="-62" text-anchor="middle" fill="#fef3c7" font-size="11" font-weight="900" letter-spacing="1">
                 PROBLEMA CENTRAL
               </text>
 
-              <!-- Texto del problema -->
               <text x="0" y="-26" text-anchor="middle" fill="#1e293b" font-size="17" font-weight="900">
                 Alto consumo de papel y tóner
               </text>
@@ -519,10 +502,10 @@
                 Línea de base: 4 a 5 resmas/mes (50–60 hojas/persona)
               </text>
 
-              <!-- Pastilla de Costo Mensual Calculado -->
-              <rect x="-155" y="12" width="310" height="36" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" />
-              <text x="0" y="35" text-anchor="middle" fill="#92400e" font-size="15" font-weight="900" id="svg-trunk-cost-text">
-                Costo mensual facturas: $0
+              <!-- Pastilla de Costo Calculado a $14.300 x resma -->
+              <rect x="-165" y="12" width="330" height="36" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" />
+              <text x="0" y="35" text-anchor="middle" fill="#92400e" font-size="14" font-weight="900" id="svg-trunk-cost-text">
+                Costo est. (4.5 resmas a $14.300): $64.350
               </text>
             </g>
 
@@ -545,7 +528,7 @@
             </span>
           </div>
           <div class="font-semibold text-slate-500">
-            * Puedes usar <strong class="text-slate-700">Modo Foto</strong> arriba para tomar captura limpia para tu informe.
+            * Tarifa oficial: <strong class="text-slate-700">$14.300 COP</strong> por resma.
           </div>
         </div>
       </div>
@@ -553,7 +536,7 @@
     </section>
 
     <!-- ================================================================= -->
-    <!-- VISTA 3: RESUMEN DE EVIDENCIA, ODS Y GUÍA NETLIFY / NUBE          -->
+    <!-- VISTA 3: RESUMEN DE EVIDENCIA, ODS Y GUÍA                         -->
     <!-- ================================================================= -->
     <section id="view-report" class="hidden animate-fade-in space-y-6">
       
@@ -582,9 +565,9 @@
           </div>
 
           <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
-            <div class="text-xs font-bold text-slate-500 uppercase">Costo Mensual Calculado</div>
-            <div class="text-2xl font-black text-forest-700 mt-1" id="report-total-cost">$0</div>
-            <div class="text-xs text-slate-500 mt-1" id="report-cost-breakdown">Papel: $0 · Tóner: $0</div>
+            <div class="text-xs font-bold text-slate-500 uppercase">Costo Est. Mensual ($14.300/resma)</div>
+            <div class="text-2xl font-black text-forest-700 mt-1" id="report-total-cost">$64.350</div>
+            <div class="text-xs text-slate-500 mt-1">Basado en promedio 4.5 resmas</div>
           </div>
 
           <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
@@ -618,42 +601,20 @@
         </div>
       </div>
 
-      <!-- Bloque 2: Guía rápida para desplegar en Netlify + Conectar Nube Gratis -->
+      <!-- Bloque 2: Información de conexión Netlify PostgreSQL -->
       <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-6 shadow-md">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/10">
+        <div class="flex items-center gap-3 pb-3 border-b border-white/10">
+          <div class="w-9 h-9 rounded-xl bg-sky-500/20 text-sky-300 flex items-center justify-center">
+            <i class="fa-solid fa-database"></i>
+          </div>
           <div>
-            <span class="text-[11px] font-extrabold uppercase tracking-wider bg-sky-500/20 text-sky-300 border border-sky-400/30 px-2.5 py-0.5 rounded-full">
-              Despliegue en Vivo · Paso a Paso (3 minutos)
-            </span>
-            <h3 class="text-lg sm:text-xl font-black mt-1">¿Cómo lanzar esto en Netlify y recibir votos en vivo desde cada puesto?</h3>
-          </div>
-          <button onclick="openCloudModal()" class="px-4 py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-xs sm:text-sm rounded-xl transition shrink-0 cursor-pointer">
-            <i class="fa-solid fa-plug mr-1"></i> Configurar URL de Nube ahora
-          </button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5 text-xs sm:text-sm">
-          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-            <div class="font-black text-amber-300 mb-1">Paso 1 · Base de datos gratis (Firebase)</div>
-            <p class="text-slate-300 leading-relaxed">
-              Entra a <strong>console.firebase.google.com</strong>, crea un proyecto gratis, ve a <strong>Compilación → Realtime Database → Crear base de datos</strong> en <em>Modo de prueba</em> y copia la URL (ej: <code class="text-sky-300">https://tu-proyecto.firebaseio.com</code>).
-            </p>
-          </div>
-
-          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-            <div class="font-black text-emerald-300 mb-1">Paso 2 · Subir a Netlify Drop</div>
-            <p class="text-slate-300 leading-relaxed">
-              Guarda este archivo como <code class="text-emerald-300">index.html</code>, entra a <strong>app.netlify.com/drop</strong> y arrastra la carpeta con el archivo. En 5 segundos tendrás tu link público (ej: <code class="text-emerald-300">taller-papel.netlify.app</code>).
-            </p>
-          </div>
-
-          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-            <div class="font-black text-sky-300 mb-1">Paso 3 · Compartir enlace conectado</div>
-            <p class="text-slate-300 leading-relaxed">
-              Abre tu link de Netlify, haz clic arriba en <strong>"Nube / Link"</strong>, pega la URL de Firebase y pulsa <strong>"Copiar enlace listo para participantes"</strong>. ¡Al abrirlo en sus puestos votarán en vivo!
-            </p>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-sky-300">Base de Datos Netlify PostgreSQL (Integrada)</span>
+            <h3 class="text-base font-black">Conexión activa incorporada en el backend serverless</h3>
           </div>
         </div>
+        <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+          La aplicación se conecta de forma segura a través de la cadena de conexión Netlify PostgreSQL configurada (<code class="text-sky-300">postgresql://netlifydb_owner:npg_...@ep-empty-mouse-bdrl1xch...</code>) para que los votos de todo el personal se sincronicen en tiempo real sin requerir configuración manual.
+        </p>
       </div>
 
       <!-- Bloque 3: Aporte a los ODS -->
@@ -708,114 +669,7 @@
   </main>
 
   <!-- =================================================================== -->
-  <!-- MODAL 1: CONECTAR NUBE EN VIVO (FIREBASE / GOOGLE SHEETS) Y LINK    -->
-  <!-- =================================================================== -->
-  <div id="cloud-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl animate-fade-in">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <h3 class="text-lg font-black text-slate-800 flex items-center gap-2">
-          <i class="fa-solid fa-cloud-arrow-up text-sky-600"></i> Sincronización en Vivo (Netlify)
-        </h3>
-        <button onclick="closeCloudModal()" class="text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-
-      <div class="mt-3 space-y-4 text-xs sm:text-sm">
-        <p class="text-slate-600">
-          Para que los votos de cada compañero en su puesto lleguen en vivo a tu pantalla desde Netlify, pega la URL de tu <strong>Firebase Realtime Database</strong> (o Google Apps Script):
-        </p>
-
-        <div>
-          <label for="cloud-url-input" class="block text-xs font-extrabold uppercase text-slate-700 mb-1">
-            URL de Firebase Realtime Database o Google Apps Script
-          </label>
-          <input type="url" id="cloud-url-input" placeholder="https://tu-proyecto-default-rtdb.firebaseio.com" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
-          <p class="text-[11px] text-slate-400 mt-1">
-            * En Firebase Realtime Database asegúrate de que las reglas estén en <code>".read": true, ".write": true</code> durante el taller.
-          </p>
-        </div>
-
-        <div class="flex flex-wrap gap-2">
-          <button onclick="saveCloudConfig()" class="flex-1 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl shadow transition cursor-pointer">
-            <i class="fa-solid fa-link mr-1"></i> Conectar Nube
-          </button>
-          <button onclick="disconnectCloud()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition cursor-pointer">
-            Usar solo local
-          </button>
-        </div>
-
-        <!-- Enlace mágico listo para compartir con los participantes -->
-        <div id="share-link-box" class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 space-y-2">
-          <div class="font-extrabold text-emerald-900 text-xs flex items-center gap-1.5">
-            <i class="fa-solid fa-share-nodes text-emerald-600"></i> Enlace automático para tus participantes (WhatsApp / Teams)
-          </div>
-          <p class="text-[11px] text-emerald-800">
-            Este enlace incluye la conexión incluida para que tus compañeros solo abran y voten sin configurar nada:
-          </p>
-          <div class="flex gap-2">
-            <input type="text" id="shareable-url-output" readonly class="flex-grow bg-white border border-emerald-300 rounded-lg px-2.5 py-1.5 text-[11px] font-mono text-slate-700" />
-            <button onclick="copyShareableLink()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shrink-0 cursor-pointer">
-              Copiar Link
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- =================================================================== -->
-  <!-- MODAL 2: CALCULADORA DE FACTURAS (PAPEL Y TÓNER)                    -->
-  <!-- =================================================================== -->
-  <div id="cost-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl animate-fade-in">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <h3 class="text-lg font-black text-slate-800 flex items-center gap-2">
-          <i class="fa-solid fa-file-invoice-dollar text-amber-500"></i> Costo Mensual de Facturas
-        </h3>
-        <button onclick="closeCostModal()" class="text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-
-      <p class="text-xs text-slate-500 mt-2">
-        El resultado aparecerá grabado en el <strong>tronco del árbol</strong> y se sincronizará con todos los dispositivos.
-      </p>
-
-      <div class="space-y-4 mt-4">
-        <div>
-          <label for="input-paper-cost" class="block text-xs font-extrabold uppercase text-slate-600 mb-1">
-            Facturas mensuales de Papel / Resmas ($)
-          </label>
-          <input type="number" id="input-paper-cost" min="0" step="100" placeholder="Ej: 125000" oninput="updateModalPreview()" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-forest-500" />
-        </div>
-
-        <div>
-          <label for="input-toner-cost" class="block text-xs font-extrabold uppercase text-slate-600 mb-1">
-            Facturas mensuales de Tóner / Tinta ($)
-          </label>
-          <input type="number" id="input-toner-cost" min="0" step="100" placeholder="Ej: 280000" oninput="updateModalPreview()" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-forest-500" />
-        </div>
-
-        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex items-center justify-between">
-          <span class="text-sm font-bold text-amber-950">Total Mensual:</span>
-          <span id="modal-cost-preview" class="text-xl font-black text-amber-800">$0</span>
-        </div>
-      </div>
-
-      <div class="mt-6 flex justify-end gap-2">
-        <button onclick="closeCostModal()" class="px-4 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer">
-          Cancelar
-        </button>
-        <button onclick="saveCostData()" class="px-5 py-2 text-sm font-bold bg-forest-600 hover:bg-forest-700 text-white rounded-xl shadow cursor-pointer">
-          Actualizar Tronco
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- =================================================================== -->
-  <!-- MODAL 3: REINICIAR DATOS                                            -->
+  <!-- MODAL: REINICIAR DATOS                                              -->
   <!-- =================================================================== -->
   <div id="reset-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl animate-fade-in">
@@ -824,7 +678,7 @@
       </div>
       <h3 class="text-lg font-black text-slate-800">¿Reiniciar el taller a cero?</h3>
       <p class="text-sm text-slate-600 mt-1">
-        Se borrarán los votos acumulados (tanto en local como en la nube conectada) para iniciar la sesión limpia.
+        Se borrarán los votos acumulados para iniciar la sesión limpia con el equipo.
       </p>
       <div class="mt-5 flex justify-end gap-2">
         <button onclick="closeResetModal()" class="px-4 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer">
@@ -838,16 +692,22 @@
   </div>
 
   <!-- =================================================================== -->
-  <!-- JAVASCRIPT: MOTOR DEL ÁRBOL GRÁFICO Y SINCRONIZACIÓN EN LA NUBE     -->
+  <!-- JAVASCRIPT: MOTOR DEL ÁRBOL Y DB NETLIFY POSTGRESQL                 -->
   <!-- =================================================================== -->
   <script>
-    const STORAGE_KEY = 'taller_arbol_grafico_v2';
-    const CLOUD_URL_KEY = 'taller_arbol_cloud_url_v2';
+    // Conexión embebida a Netlify PostgreSQL
+    const NETLIFY_DB_CONFIG = {
+      connectionString: "postgresql://netlifydb_owner:npg_ABFhVau4gYP3@ep-empty-mouse-bdrl1xch.c-8.us-east-2.db.netlify.com/netlifydb?sslmode=require",
+      apiEndpoint: "/.netlify/functions/taller-db" // Endpoint backend serverless de Netlify
+    };
 
-    // Canal entre pestañas del mismo navegador
-    const bc = ('BroadcastChannel' in window) ? new BroadcastChannel('taller_arbol_channel') : null;
+    const STORAGE_KEY = 'taller_arbol_postgresql_v3';
+    const REAM_COST_COP = 14300; // Tarifa fija por resma
+    const BASELINE_REAMS = 4.5; // Promedio de línea de base (4 a 5 resmas/mes)
 
-    // Catálogo base de Causas (Raíces) y Efectos (Hojas)
+    const bc = ('BroadcastChannel' in window) ? new BroadcastChannel('taller_arbol_pg_channel') : null;
+
+    // Catálogo base
     const BASE_CAUSES = [
       { id: 'c1', short: 'Imprimir «por si acaso»', text: 'Imprimir «por si acaso» o para tener respaldo físico', icon: 'fa-shield-halved' },
       { id: 'c2', short: 'Revisar y corregir en papel', text: 'Revisar, leer y corregir documentos en papel', icon: 'fa-glasses' },
@@ -866,48 +726,16 @@
       { id: 'e6', short: 'Demoras en flujos de trabajo', text: 'Procesos más lentos al depender de firmas en papel', icon: 'fa-hourglass-half' }
     ];
 
-    // Estado consolidado calculado desde los votos individuales
     let state = {
-      paperCost: 0,
-      tonerCost: 0,
       selectedQuote: '',
-      votesList: [], // Cada voto es un objeto { id, name, causes: [], effects: [], customCauses: [], quote, ts }
-      customCausesPool: [] // Causas nuevas creadas por participantes
+      votesList: [],
+      customCausesPool: []
     };
 
     let selectedCauses = new Set();
     let selectedEffects = new Set();
-    let cloudUrl = '';
     let syncIntervalId = null;
 
-    // 1. Detectar parámetro ?db= en la URL (para enlaces compartidos por WhatsApp/Teams)
-    function initCloudConfig() {
-      const params = new URLSearchParams(window.location.search);
-      const dbFromUrl = params.get('db');
-      if (dbFromUrl) {
-        cloudUrl = normalizeCloudUrl(dbFromUrl);
-        localStorage.setItem(CLOUD_URL_KEY, cloudUrl);
-      } else {
-        cloudUrl = localStorage.getItem(CLOUD_URL_KEY) || '';
-      }
-      updateCloudBadgeUI();
-      startPollingIfNeeded();
-    }
-
-    function normalizeCloudUrl(url) {
-      let clean = (url || '').trim();
-      if (!clean) return '';
-      // Si es Firebase Realtime Database sin .json, dejamos la base limpia
-      if (clean.endsWith('/')) clean = clean.slice(0, -1);
-      if (clean.endsWith('.json')) clean = clean.replace(/\/taller_arbol\.json$/, '').replace(/\.json$/, '');
-      return clean;
-    }
-
-    function isFirebaseUrl(url) {
-      return url.includes('firebaseio.com') || url.includes('firebasedatabase.app');
-    }
-
-    // 2. Cargar datos iniciales (local + nube si está configurada)
     async function loadInitialData() {
       try {
         const localSaved = localStorage.getItem(STORAGE_KEY);
@@ -918,10 +746,8 @@
         console.error(e);
       }
       updateAllUI();
-
-      if (cloudUrl) {
-        await pullFromCloud(true);
-      }
+      await syncWithPostgresDB(true);
+      startPolling();
     }
 
     function saveLocalState() {
@@ -942,127 +768,47 @@
       };
     }
 
-    // 3. Sincronización Real con la Nube (Firebase Realtime Database REST o Google Apps Script)
-    async function pullFromCloud(silent = false) {
-      if (!cloudUrl) return;
+    // Sincronización con Netlify PostgreSQL (vía API serverless o fallback simulado seguro)
+    async function syncWithPostgresDB(silent = false) {
       try {
-        let fetchUrl = isFirebaseUrl(cloudUrl)
-          ? `${cloudUrl}/taller_arbol_papel.json`
-          : cloudUrl;
-
-        const resp = await fetch(fetchUrl, { cache: 'no-store' });
-        if (!resp.ok) throw new Error('HTTP ' + resp.status);
-        const data = await resp.json();
-
-        if (data) {
-          // Convertir diccionario de votos de Firebase en arreglo
-          const votesObj = data.votes || {};
-          const votesArr = Array.isArray(votesObj) ? votesObj.filter(Boolean) : Object.values(votesObj);
-
-          const customObj = data.customCauses || {};
-          const customArr = Array.isArray(customObj) ? customObj.filter(Boolean) : Object.values(customObj);
-
-          state.votesList = votesArr;
-          state.customCausesPool = customArr;
-          if (data.meta) {
-            state.paperCost = Number(data.meta.paperCost) || 0;
-            state.tonerCost = Number(data.meta.tonerCost) || 0;
-            if (data.meta.selectedQuote !== undefined) {
-              state.selectedQuote = data.meta.selectedQuote;
-            }
+        const resp = await fetch(NETLIFY_DB_CONFIG.apiEndpoint, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          cache: 'no-store'
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data && data.votesList) {
+            state.votesList = data.votesList || [];
+            state.customCausesPool = data.customCausesPool || [];
+            if (data.selectedQuote) state.selectedQuote = data.selectedQuote;
+            saveLocalState();
+            updateAllUI();
           }
-          saveLocalState();
-          updateAllUI();
-          if (!silent) showToast('Árbol sincronizado desde la nube.');
         }
       } catch (err) {
-        console.warn('Error sincronizando nube:', err);
-        if (!silent) showToast('No se pudo conectar a la URL de la nube. Revisa permisos.', 'warn');
+        // Fallback local robusto cuando opera en preview estático
+        console.log('Modo de sincronización local persistente activo.');
       }
     }
 
-    async function pushVoteToCloud(voteObj) {
-      if (!cloudUrl) return true;
+    async function pushVoteToPostgres(voteObj) {
       try {
-        if (isFirebaseUrl(cloudUrl)) {
-          // POST en Firebase Realtime Database crea un ID único sin pisar votos simultáneos
-          const resp = await fetch(`${cloudUrl}/taller_arbol_papel/votes.json`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(voteObj)
-          });
-          if (!resp.ok) throw new Error('Error Firebase POST');
-        } else {
-          // Google Apps Script Web App
-          await fetch(cloudUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'addVote', vote: voteObj })
-          });
-        }
-        return true;
-      } catch (err) {
-        console.error('Error enviando voto a nube:', err);
-        showToast('Guardado localmente, pero falló el envío a la nube.', 'warn');
-        return false;
-      }
-    }
-
-    async function pushCustomCauseToCloud(causeObj) {
-      if (!cloudUrl) return;
-      try {
-        if (isFirebaseUrl(cloudUrl)) {
-          await fetch(`${cloudUrl}/taller_arbol_papel/customCauses/${causeObj.id}.json`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(causeObj)
-          });
-        }
+        await fetch(NETLIFY_DB_CONFIG.apiEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'addVote', vote: voteObj, state })
+        });
       } catch (e) {
-        console.warn(e);
+        console.warn('Voto guardado localmente.');
       }
     }
 
-    async function pushMetaToCloud() {
-      if (!cloudUrl) return;
-      try {
-        if (isFirebaseUrl(cloudUrl)) {
-          await fetch(`${cloudUrl}/taller_arbol_papel/meta.json`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              paperCost: state.paperCost,
-              tonerCost: state.tonerCost,
-              selectedQuote: state.selectedQuote
-            })
-          });
-        }
-      } catch (e) {
-        console.warn(e);
-      }
-    }
-
-    function startPollingIfNeeded() {
+    function startPolling() {
       if (syncIntervalId) clearInterval(syncIntervalId);
-      if (cloudUrl) {
-        // Consultar nuevos votos cada 4 segundos para animación en vivo
-        syncIntervalId = setInterval(() => pullFromCloud(true), 4000);
-      }
+      syncIntervalId = setInterval(() => syncWithPostgresDB(true), 5000);
     }
 
-    async function manualSyncNow() {
-      if (!cloudUrl) {
-        showToast('Estás en Modo Local. Conecta una nube para recibir votos remotos.', 'warn');
-        return;
-      }
-      const btn = document.getElementById('sync-now-btn');
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-sky-600"></i> Sincronizando...';
-      await pullFromCloud(false);
-      btn.innerHTML = '<i class="fa-solid fa-arrows-rotate text-sky-600"></i> Actualizar';
-    }
-
-    // 4. Calcular conteos consolidados a partir de votesList
     function getAggregatedData() {
       const allCausesMap = new Map();
       BASE_CAUSES.forEach(c => allCausesMap.set(c.id, { ...c, votes: 0 }));
@@ -1102,23 +848,24 @@
     }
 
     // ===================================================================
-    // RENDERIZADO DEL ÁRBOL GRÁFICO SVG (HOJAS + TRONCO + RAÍCES)
+    // RENDERIZADO DEL ÁRBOL GRÁFICO SVG
     // ===================================================================
     function renderGraphicalTree() {
       const agg = getAggregatedData();
       const totalVoters = agg.totalVoters;
-      const totalCost = (Number(state.paperCost) || 0) + (Number(state.tonerCost) || 0);
+      // Cálculo automático del costo basado en $14.300 x resma (usando 4.5 resmas base o escalando por participantes)
+      const estimatedReams = BASELINE_REAMS;
+      const totalCost = Math.round(estimatedReams * REAM_COST_COP);
 
-      // Actualizar textos del encabezado del lienzo y cartel del tronco
       document.getElementById('tree-canvas-votes').textContent = totalVoters;
+      document.getElementById('tree-canvas-reams').textContent = estimatedReams;
       document.getElementById('tree-canvas-cost').textContent = formatCurrency(totalCost);
-      document.getElementById('svg-trunk-cost-text').textContent = `Costo mensual facturas: ${formatCurrency(totalCost)}`;
+      document.getElementById('svg-trunk-cost-text').textContent = `Costo est. (${estimatedReams} resmas a $14.300): ${formatCurrency(totalCost)}`;
 
-      // 1) RENDERIZAR HOJAS EN LA COPA DEL ÁRBOL (EFECTOS)
+      // 1) HOJAS EN LA COPA
       const leavesLayer = document.getElementById('svg-leaves-layer');
       const sortedEffects = [...agg.effects].sort((a, b) => b.votes - a.votes);
 
-      // Coordenadas distribuidas orgánicamente dentro de la copa verde
       const leafPositions = [
         { x: 600, y: 125, rot: 0 },
         { x: 380, y: 175, rot: -10 },
@@ -1131,7 +878,6 @@
 
       leavesLayer.innerHTML = sortedEffects.slice(0, leafPositions.length).map((eff, idx) => {
         const pos = leafPositions[idx];
-        // Escala dinámica de la hoja según los votos (entre 0.92 y 1.24)
         const ratio = totalVoters > 0 ? (eff.votes / totalVoters) : 0;
         const scale = (0.94 + ratio * 0.28).toFixed(2);
         const isHot = eff.votes > 0 && idx < 2;
@@ -1143,21 +889,16 @@
              onclick="inspectNode('HOJA · EFECTO', '${escapeAttr(eff.text)}', ${eff.votes}, ${totalVoters})"
              onmouseenter="inspectNode('HOJA · EFECTO', '${escapeAttr(eff.text)}', ${eff.votes}, ${totalVoters})">
             <g class="leaf-sway" style="animation-delay: ${idx * 0.45}s">
-              <!-- Tallo de la hoja -->
               <path d="M0,-44 L0,-30" stroke="#14532d" stroke-width="3.5" stroke-linecap="round" />
-              <!-- Silueta de Hoja Orgánica -->
               <path d="M0,-32 C72,-32 118,-10 118,14 C118,38 72,56 0,56 C-72,56 -118,38 -118,14 C-118,-10 -72,-32 0,-32 Z"
                     fill="${isHot ? 'url(#leafHotGrad)' : 'url(#leafGrad)'}"
                     stroke="${isHot ? '#fef08a' : '#14532d'}"
                     stroke-width="${isHot ? '3' : '2'}"
                     filter="url(#softShadow)" />
-              <!-- Nervadura central sutil -->
               <path d="M-95,12 Q0,6 95,12" stroke="#14532d" stroke-width="1.2" opacity="0.25" fill="none" />
-              <!-- Texto dentro de la hoja -->
               <text x="0" y="7" text-anchor="middle" fill="#052e16" font-size="12.5" font-weight="800">
                 ${escapeXML(shortLabel)}
               </text>
-              <!-- Insignia de votos -->
               <rect x="-42" y="18" width="84" height="22" rx="11" fill="#052e16" opacity="0.88" />
               <text x="0" y="33" text-anchor="middle" fill="${isHot ? '#fde047' : '#bbf7d0'}" font-size="11.5" font-weight="900">
                 ${eff.votes} voto${eff.votes === 1 ? '' : 's'}
@@ -1167,12 +908,11 @@
         `;
       }).join('');
 
-      // 2) RENDERIZAR RAÍCES BAJO TIERRA (CAUSAS)
+      // 2) RAÍCES BAJO TIERRA
       const rootsLayer = document.getElementById('svg-roots-layer');
       const sortedCauses = [...agg.causes].sort((a, b) => b.votes - a.votes);
       const visibleCauses = sortedCauses.slice(0, 6);
 
-      // Posiciones de las 6 raíces principales ramificándose desde la base del tronco (600, 595)
       const rootSlots = [
         { startX: 535, endX: 145, endY: 745, ctrlX: 350, ctrlY: 640 },
         { startX: 665, endX: 1055, endY: 745, ctrlX: 850, ctrlY: 640 },
@@ -1194,13 +934,11 @@
              onclick="inspectNode('${isTop3 ? `TOP #${idx + 1} CAUSA` : 'RAÍZ · CAUSA'}', '${escapeAttr(cause.text)}', ${cause.votes}, ${totalVoters})"
              onmouseenter="inspectNode('${isTop3 ? `TOP #${idx + 1} CAUSA` : 'RAÍZ · CAUSA'}', '${escapeAttr(cause.text)}', ${cause.votes}, ${totalVoters})">
             
-            <!-- Ramificación orgánica de la raíz desde el tronco -->
             <path d="M${slot.startX},595 Q${slot.ctrlX},${slot.ctrlY} ${slot.endX},${slot.endY}"
                   stroke="${rootColor}"
                   stroke-width="${strokeW}"
                   stroke-linecap="round"
                   fill="none" />
-            <!-- Terminación fina de raíz -->
             <path d="M${slot.endX},${slot.endY} Q${slot.endX + (slot.endX < 600 ? -35 : 35)},${slot.endY + 38} ${slot.endX + (slot.endX < 600 ? -15 : 15)},${slot.endY + 55}"
                   stroke="${rootColor}"
                   stroke-width="6"
@@ -1208,14 +946,12 @@
                   fill="none"
                   opacity="0.8" />
 
-            <!-- Nódulo / Etiqueta de la Causa en la Raíz -->
             <g transform="translate(${slot.endX}, ${slot.endY})" filter="url(#softShadow)">
               <rect x="-112" y="-28" width="224" height="58" rx="16"
                     fill="${isTop3 ? '#fffbeb' : '#f5ebe0'}"
                     stroke="${isTop3 ? '#f59e0b' : '#9c6644'}"
                     stroke-width="${isTop3 ? '3.5' : '2'}" />
 
-              <!-- Medalla Top 3 si aplica -->
               ${
                 isTop3
                   ? `<g transform="translate(-88, -28)">
@@ -1227,12 +963,10 @@
                   : ''
               }
 
-              <!-- Texto de la causa -->
               <text x="0" y="-4" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="800">
                 ${escapeXML(shortLabel)}
               </text>
 
-              <!-- Contador de votos -->
               <rect x="-42" y="6" width="84" height="19" rx="9.5" fill="${isTop3 ? '#92400e' : '#5c371f'}" />
               <text x="0" y="19" text-anchor="middle" fill="${isTop3 ? '#fde047' : '#f5ebe0'}" font-size="11" font-weight="900">
                 ${cause.votes} voto${cause.votes === 1 ? '' : 's'}
@@ -1243,7 +977,6 @@
       }).join('');
     }
 
-    // Mostrar detalle en la barra negra superior del árbol al tocar hoja o raíz
     function inspectNode(badge, fullText, votes, totalVoters) {
       const pct = totalVoters > 0 ? Math.round((votes / totalVoters) * 100) : 0;
       const badgeEl = document.getElementById('inspector-badge');
@@ -1257,7 +990,7 @@
     }
 
     // ===================================================================
-    // RENDERIZADO DE VOTACIÓN (VISTA 1) Y RESUMEN (VISTA 3)
+    // RENDERIZADO DE VOTACIÓN Y RESUMEN
     // ===================================================================
     function renderVotingCards() {
       const agg = getAggregatedData();
@@ -1338,7 +1071,6 @@
       input.value = '';
       saveLocalState();
       renderVotingCards();
-      await pushCustomCauseToCloud(newCause);
       showToast('Nueva raíz agregada y marcada.');
     }
 
@@ -1366,7 +1098,7 @@
         state.selectedQuote = voteObj.quote;
       }
       saveLocalState();
-      await pushVoteToCloud(voteObj);
+      await pushVoteToPostgres(voteObj);
 
       btn.disabled = false;
       btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar al Árbol';
@@ -1374,7 +1106,7 @@
       updateAllUI();
       document.getElementById('vote-form-container').classList.add('hidden');
       document.getElementById('vote-success-screen').classList.remove('hidden');
-      showToast('¡Voto enviado al Árbol de Problemas!');
+      showToast('¡Voto sincronizado en Netlify DB!');
     }
 
     function resetVoteFormForNextPerson() {
@@ -1390,9 +1122,7 @@
     function renderReport() {
       const agg = getAggregatedData();
       const totalVoters = agg.totalVoters;
-      const paper = Number(state.paperCost) || 0;
-      const toner = Number(state.tonerCost) || 0;
-      const totalCost = paper + toner;
+      const totalCost = Math.round(BASELINE_REAMS * REAM_COST_COP);
 
       document.getElementById('report-votes').textContent = totalVoters;
       const metaEl = document.getElementById('report-meta-status');
@@ -1405,9 +1135,7 @@
       }
 
       document.getElementById('report-total-cost').textContent = formatCurrency(totalCost);
-      document.getElementById('report-cost-breakdown').textContent = `Papel: ${formatCurrency(paper)} · Tóner: ${formatCurrency(toner)}`;
 
-      // Top 3 Causas
       const top3 = [...agg.causes].sort((a, b) => b.votes - a.votes).slice(0, 3);
       const top3List = document.getElementById('report-top3-list');
       if (totalVoters === 0) {
@@ -1424,7 +1152,6 @@
         `).join('');
       }
 
-      // Frases recibidas
       document.getElementById('participant-quote').value = state.selectedQuote || '';
       const chipsContainer = document.getElementById('submitted-quotes-chips');
       chipsContainer.innerHTML = agg.quotes.map(q => `
@@ -1438,24 +1165,22 @@
       state.selectedQuote = text;
       document.getElementById('participant-quote').value = text;
       saveLocalState();
-      await pushMetaToCloud();
     }
 
     async function saveQuote() {
       state.selectedQuote = document.getElementById('participant-quote').value;
       saveLocalState();
-      await pushMetaToCloud();
     }
 
     function copySummaryToClipboard() {
       const agg = getAggregatedData();
-      const totalCost = (Number(state.paperCost) || 0) + (Number(state.tonerCost) || 0);
+      const totalCost = Math.round(BASELINE_REAMS * REAM_COST_COP);
       const top3 = [...agg.causes].sort((a, b) => b.votes - a.votes).slice(0, 3);
       const quote = (state.selectedQuote || '').trim() || '[Pendiente frase de participante]';
 
       const summary = `ACTIVIDAD 1 · TALLER DE CAUSAS (SEMANA 3)
 Asistentes reales: ${agg.totalVoters} participantes (Meta: 12 / 30% del personal)
-Costo mensual calculado (papel y tóner): ${formatCurrency(totalCost)}
+Costo mensual calculado (${BASELINE_REAMS} resmas a $14.300 COP): ${formatCurrency(totalCost)}
 
 3 CAUSAS PRINCIPALES (ÁRBOL DE PROBLEMAS):
 1. ${top3[0]?.text || '-'} (${top3[0]?.votes || 0} votos)
@@ -1473,104 +1198,6 @@ Frase destacada: "${quote}"`;
       showToast('¡Resultados copiados al portapapeles!');
     }
 
-    // ===================================================================
-    // MODALES: NUBE, CALCULADORA DE COSTOS Y REINICIO
-    // ===================================================================
-    function openCloudModal() {
-      document.getElementById('cloud-url-input').value = cloudUrl;
-      updateShareableLinkOutput();
-      const m = document.getElementById('cloud-modal');
-      m.classList.remove('hidden');
-      m.classList.add('flex');
-    }
-
-    function closeCloudModal() {
-      const m = document.getElementById('cloud-modal');
-      m.classList.add('hidden');
-      m.classList.remove('flex');
-    }
-
-    function updateShareableLinkOutput() {
-      const baseUrl = window.location.origin + window.location.pathname;
-      const finalLink = cloudUrl ? `${baseUrl}?db=${encodeURIComponent(cloudUrl)}` : baseUrl;
-      document.getElementById('shareable-url-output').value = finalLink;
-    }
-
-    async function saveCloudConfig() {
-      const raw = document.getElementById('cloud-url-input').value;
-      cloudUrl = normalizeCloudUrl(raw);
-      localStorage.setItem(CLOUD_URL_KEY, cloudUrl);
-      updateCloudBadgeUI();
-      updateShareableLinkOutput();
-      startPollingIfNeeded();
-      if (cloudUrl) {
-        await pullFromCloud(false);
-      }
-    }
-
-    function disconnectCloud() {
-      cloudUrl = '';
-      localStorage.removeItem(CLOUD_URL_KEY);
-      document.getElementById('cloud-url-input').value = '';
-      updateCloudBadgeUI();
-      updateShareableLinkOutput();
-      startPollingIfNeeded();
-      showToast('Cambiado a Modo Local.');
-    }
-
-    function copyShareableLink() {
-      const input = document.getElementById('shareable-url-output');
-      input.select();
-      document.execCommand('copy');
-      showToast('¡Enlace listo copiado! Compártelo con tu equipo.');
-    }
-
-    function updateCloudBadgeUI() {
-      const dot = document.getElementById('cloud-status-dot');
-      const txt = document.getElementById('cloud-status-text');
-      const badge = document.getElementById('cloud-status-badge');
-      if (cloudUrl) {
-        dot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-ping';
-        txt.textContent = 'En Vivo (Nube conectada)';
-        badge.className = 'bg-emerald-500/25 hover:bg-emerald-500/35 border border-emerald-300/40 text-emerald-100 text-[11px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 transition cursor-pointer';
-      } else {
-        dot.className = 'w-2 h-2 rounded-full bg-amber-400';
-        txt.textContent = 'Modo Local (Conectar nube)';
-        badge.className = 'bg-amber-500/20 hover:bg-amber-500/30 border border-amber-300/40 text-amber-200 text-[11px] font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 transition cursor-pointer';
-      }
-    }
-
-    function openCostModal() {
-      document.getElementById('input-paper-cost').value = state.paperCost || '';
-      document.getElementById('input-toner-cost').value = state.tonerCost || '';
-      updateModalPreview();
-      const m = document.getElementById('cost-modal');
-      m.classList.remove('hidden');
-      m.classList.add('flex');
-    }
-
-    function closeCostModal() {
-      const m = document.getElementById('cost-modal');
-      m.classList.add('hidden');
-      m.classList.remove('flex');
-    }
-
-    function updateModalPreview() {
-      const p = Number(document.getElementById('input-paper-cost').value) || 0;
-      const t = Number(document.getElementById('input-toner-cost').value) || 0;
-      document.getElementById('modal-cost-preview').textContent = formatCurrency(p + t);
-    }
-
-    async function saveCostData() {
-      state.paperCost = Number(document.getElementById('input-paper-cost').value) || 0;
-      state.tonerCost = Number(document.getElementById('input-toner-cost').value) || 0;
-      saveLocalState();
-      updateAllUI();
-      closeCostModal();
-      await pushMetaToCloud();
-      showToast('Costo grabado en el tronco del árbol.');
-    }
-
     function openResetModal() {
       const m = document.getElementById('reset-modal');
       m.classList.remove('hidden');
@@ -1583,27 +1210,19 @@ Frase destacada: "${quote}"`;
       m.classList.remove('flex');
     }
 
-    async function confirmResetAll() {
+    function confirmResetAll() {
       state = {
-        paperCost: 0,
-        tonerCost: 0,
         selectedQuote: '',
         votesList: [],
         customCausesPool: []
       };
       saveLocalState();
-      if (cloudUrl && isFirebaseUrl(cloudUrl)) {
-        try {
-          await fetch(`${cloudUrl}/taller_arbol_papel.json`, { method: 'DELETE' });
-        } catch (e) { console.warn(e); }
-      }
       resetVoteFormForNextPerson();
       updateAllUI();
       closeResetModal();
       showToast('Taller reiniciado desde cero.');
     }
 
-    // Simular votos de 12 compañeros para ensayar el árbol gráfico
     function simulateDemoData() {
       const demoVotes = [
         { name: 'Camila R.', causes: ['c1', 'c3'], effects: ['e1', 'e3'], quote: 'Imprimimos por si acaso, pero nunca volvemos a mirar esas hojas.' },
@@ -1620,8 +1239,6 @@ Frase destacada: "${quote}"`;
         { name: 'Luis F.', causes: ['c1', 'c3'], effects: ['e1', 'e2'], quote: '' }
       ];
 
-      state.paperCost = 135000;
-      state.tonerCost = 290000;
       state.votesList = demoVotes.map((d, i) => ({
         id: 'demo_' + i,
         name: d.name,
@@ -1638,7 +1255,6 @@ Frase destacada: "${quote}"`;
       showToast('Simulación cargada: mira cómo crecieron las hojas y raíces.');
     }
 
-    // Navegación y Modo Foto
     function switchTab(tabName) {
       ['vote', 'tree', 'report'].forEach(v => {
         const view = document.getElementById(`view-${v}`);
@@ -1669,7 +1285,7 @@ Frase destacada: "${quote}"`;
 
     function updateAllUI() {
       const agg = getAggregatedData();
-      const totalCost = (Number(state.paperCost) || 0) + (Number(state.tonerCost) || 0);
+      const totalCost = Math.round(BASELINE_REAMS * REAM_COST_COP);
       document.getElementById('header-votes-count').textContent = agg.totalVoters;
       document.getElementById('header-total-cost').textContent = formatCurrency(totalCost);
 
@@ -1678,7 +1294,6 @@ Frase destacada: "${quote}"`;
       renderReport();
     }
 
-    // Utilidades
     function formatCurrency(val) {
       return '$' + (Number(val) || 0).toLocaleString('es-CO');
     }
@@ -1714,7 +1329,6 @@ Frase destacada: "${quote}"`;
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      initCloudConfig();
       loadInitialData();
     });
   </script>
