@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Actividad 1 · Árbol de Problemas Interactivo (Taller de Causas)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            forest: {
+              50: '#f1f9f4',
+              100: '#def2e6',
+              200: '#bfe4ce',
+              500: '#2b8a57',
+              600: '#1f6f45',
+              700: '#195838',
+              800: '#15462e',
+              900: '#113a26',
+            },
+            earth: {
+              50: '#fbf8f5',
+              100: '#f4ece3',
+              200: '#e6d5c3',
+              600: '#8c5832',
+              700: '#724526',
+              800: '#5c371f',
+              900: '#492b18',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f7f4;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.35s ease-out forwards;
+    }
+
+    @keyframes leafSway {
+      0%, 100% { transform: rotate(-1.5deg); }
+      50% { transform: rotate(1.5deg); }
+    }
+    .leaf-sway {
+      transform-origin: top center;
+      animation: leafSway 4.5s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.45)); }
+      50% { filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.85)); }
+    }
+    .top-root-glow {
+      animation: pulseGlow 2.8s ease-in-out infinite;
+    }
+
+    /* Modo Foto / Captura Limpia en pantalla completa */
+    body.photo-mode header,
+    body.photo-mode .no-photo-mode {
+      display: none !important;
+    }
+    body.photo-mode main {
+      max-width: 100% !important;
+      padding: 0.75rem !important;
+    }
+    body.photo-mode #exit-photo-mode-btn {
+      display: flex !important;
+    }
+
+    @media print {
+      header, .no-print, #exit-photo-mode-btn {
+        display: none !important;
+      }
+      body {
+        background: white !important;
+      }
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Contenedor de notificaciones Toast -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Botón flotante para salir del Modo Foto -->
+  <button id="exit-photo-mode-btn" onclick="togglePhotoMode(false)" class="hidden fixed top-4 right-4 z-50 bg-slate-900/85 hover:bg-slate-900 text-white px-4 py-2.5 rounded-full shadow-xl text-xs font-bold items-center gap-2 backdrop-blur-sm border border-white/20 cursor-pointer">
+    <i class="fa-solid fa-compress"></i> Salir de Modo Foto
+  </button>
+
+  <!-- =================================================================== -->
+  <!-- ENCABEZADO PRINCIPAL                                                -->
+  <!-- =================================================================== -->
+  <header class="bg-gradient-to-r from-forest-900 via-forest-800 to-emerald-900 text-white shadow-lg no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        
+        <!-- Título y contexto -->
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-1">
+            <span class="bg-emerald-500/25 border border-emerald-300/30 text-emerald-100 text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+              <i class="fa-solid fa-seedling mr-1"></i> Actividad 1 · Semana 3
+            </span>
+            <!-- Indicador de estado de conexión en la nube -->
+            <button onclick="openCloudModal()" id="cloud-status-badge" class="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-300/40 text-amber-200 text-[11px] font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 transition cursor-pointer">
+              <span id="cloud-status-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <span id="cloud-status-text">Modo Local (Sin nube)</span>
+            </button>
+          </div>
+          <h1 class="text-xl sm:text-2xl font-black tracking-tight">
+            Taller de Causas: Árbol de Problemas del Papel
+          </h1>
+          <p class="text-emerald-100/90 text-xs sm:text-sm mt-0.5">
+            Línea de base: <strong>4–5 resmas/mes</strong> (50–60 hojas/persona) · Meta: <strong>12 participantes (30%)</strong> + interlocutor
+          </p>
+        </div>
+
+        <!-- Indicadores en tiempo real -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          <!-- Participantes -->
+          <div class="bg-white/10 backdrop-blur-xs border border-white/15 rounded-xl px-3.5 py-2 flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-lg bg-emerald-500/30 text-amber-300 flex items-center justify-center">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+              <div class="text-[10px] uppercase tracking-wider text-emerald-200 font-bold">Votantes</div>
+              <div class="text-base font-extrabold leading-tight">
+                <span id="header-votes-count">0</span> <span class="text-xs font-normal text-emerald-200">/ 12</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Costo Mensual Facturas -->
+          <button onclick="openCostModal()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-xl px-3.5 py-2 flex items-center gap-2.5 transition shadow-md cursor-pointer text-left">
+            <div class="w-9 h-9 rounded-lg bg-amber-600/20 text-slate-900 flex items-center justify-center">
+              <i class="fa-solid fa-file-invoice-dollar"></i>
+            </div>
+            <div>
+              <div class="text-[10px] uppercase tracking-wider font-extrabold text-slate-800">Costo Mensual</div>
+              <div class="text-base font-black leading-tight flex items-center gap-1">
+                <span id="header-total-cost">$0</span>
+                <i class="fa-solid fa-pen text-[10px] opacity-70"></i>
+              </div>
+            </div>
+          </button>
+
+          <!-- Botón Conectar Nube / Compartir Link -->
+          <button onclick="openCloudModal()" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl px-3.5 py-2.5 text-xs sm:text-sm flex items-center gap-2 transition shadow-md cursor-pointer">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>Nube / Link</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navegación Principal -->
+      <nav class="mt-4 pt-3 border-t border-white/15 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex flex-wrap gap-1.5 w-full sm:w-auto">
+          <button id="tab-btn-vote" onclick="switchTab('vote')" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer bg-white text-forest-900 shadow">
+            <i class="fa-solid fa-hand-pointer"></i>
+            <span>1. Votar en mi Puesto</span>
+          </button>
+          <button id="tab-btn-tree" onclick="switchTab('tree')" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer text-white/90 hover:bg-white/10">
+            <i class="fa-solid fa-tree"></i>
+            <span>2. Árbol Gráfico en Vivo</span>
+          </button>
+          <button id="tab-btn-report" onclick="switchTab('report')" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer text-white/90 hover:bg-white/10">
+            <i class="fa-solid fa-clipboard-list"></i>
+            <span>3. Evidencia, ODS y Guía</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2 ml-auto">
+          <button onclick="simulateDemoData()" class="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg border border-white/15 transition flex items-center gap-1.5 cursor-pointer">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+            <span>Simular Equipo</span>
+          </button>
+          <button onclick="openResetModal()" class="text-xs bg-red-500/20 hover:bg-red-500/35 text-red-100 px-3 py-1.5 rounded-lg border border-red-300/20 transition flex items-center gap-1.5 cursor-pointer">
+            <i class="fa-solid fa-rotate-left"></i>
+            <span>Reiniciar</span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- =================================================================== -->
+  <!-- CONTENIDO PRINCIPAL                                                 -->
+  <!-- =================================================================== -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ================================================================= -->
+    <!-- VISTA 1: VOTACIÓN DESDE EL PUESTO                                 -->
+    <!-- ================================================================= -->
+    <section id="view-vote" class="animate-fade-in">
+      
+      <!-- Banner de bienvenida -->
+      <div class="bg-white border border-forest-200 rounded-2xl p-4 sm:p-5 mb-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex items-start gap-3.5">
+          <div class="w-11 h-11 rounded-xl bg-forest-100 text-forest-700 flex items-center justify-center shrink-0 text-xl">
+            <i class="fa-solid fa-leaf"></i>
+          </div>
+          <div>
+            <h2 class="text-base sm:text-lg font-extrabold text-slate-800">Haz crecer nuestro Árbol de Problemas</h2>
+            <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
+              No buscamos señalar a nadie, sino ver el patrón entre todos. Elige tus <strong>raíces (causas)</strong> y <strong>hojas (consecuencias)</strong> y envíalas al árbol en vivo.
+            </p>
+          </div>
+        </div>
+        <div class="w-full md:w-64">
+          <label for="voter-name" class="block text-[11px] font-bold uppercase text-slate-500 mb-1">Tu nombre (opcional / anónimo)</label>
+          <input type="text" id="voter-name" maxlength="35" placeholder="Ej: Laura M. o Anónimo" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-forest-500" />
+        </div>
+      </div>
+
+      <!-- Pantalla de Confirmación tras votar -->
+      <div id="vote-success-screen" class="hidden bg-white border-2 border-forest-500 rounded-3xl p-8 text-center max-w-xl mx-auto my-8 shadow-xl animate-fade-in">
+        <div class="w-20 h-20 bg-forest-100 text-forest-600 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">
+          <i class="fa-solid fa-tree"></i>
+        </div>
+        <h3 class="text-2xl font-black text-slate-800">¡Tus hojas y raíces ya están en el árbol!</h3>
+        <p class="text-slate-600 mt-2 text-sm sm:text-base">
+          Tu aporte se sincronizó correctamente. Mira cómo va creciendo el árbol colectivo en tiempo real.
+        </p>
+        <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button onclick="switchTab('tree')" class="w-full sm:w-auto px-6 py-3.5 bg-forest-600 hover:bg-forest-700 text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-eye"></i> Ver el Árbol en Vivo
+          </button>
+          <button onclick="resetVoteFormForNextPerson()" class="w-full sm:w-auto px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-user-plus"></i> Votar otra persona aquí
+          </button>
+        </div>
+      </div>
+
+      <!-- Formulario de selección -->
+      <div id="vote-form-container" class="space-y-6">
+        
+        <!-- PASO 1: CAUSAS (SE CONVIERTEN EN RAÍCES) -->
+        <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-xs border border-earth-200">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-slate-100 mb-4">
+            <div>
+              <span class="text-[11px] font-extrabold uppercase tracking-wider text-earth-800 bg-earth-100 px-2.5 py-1 rounded-md">
+                <i class="fa-solid fa-seedling mr-1"></i> 1. Raíces del Árbol (Causas)
+              </span>
+              <h3 class="text-base sm:text-lg font-extrabold text-slate-800 mt-1.5">¿Por qué solemos imprimir papel en la oficina?</h3>
+            </div>
+            <span id="selected-causes-badge" class="text-xs font-bold text-earth-700 bg-earth-50 px-3 py-1 rounded-full border border-earth-200">0 elegidas</span>
+          </div>
+
+          <div id="causes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+
+          <!-- Agregar causa propia -->
+          <div class="mt-5 pt-4 border-t border-slate-100">
+            <label for="custom-cause-input" class="block text-xs font-bold uppercase text-slate-500 mb-1.5">
+              ¿Falta alguna causa? Escríbela y súmala al árbol:
+            </label>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <input type="text" id="custom-cause-input" maxlength="70" placeholder="Ej: Imprimir correos largos para leerlos mejor..." class="flex-grow rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-earth-600" />
+              <button type="button" onclick="addCustomCause()" class="px-5 py-2.5 bg-earth-700 hover:bg-earth-800 text-white text-sm font-bold rounded-xl transition flex items-center justify-center gap-2 shrink-0 cursor-pointer">
+                <i class="fa-solid fa-plus"></i> Agregar raíz
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASO 2: EFECTOS (SE CONVIERTEN EN HOJAS DE LA COPA) -->
+        <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-xs border border-forest-200">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-slate-100 mb-4">
+            <div>
+              <span class="text-[11px] font-extrabold uppercase tracking-wider text-forest-800 bg-forest-100 px-2.5 py-1 rounded-md">
+                <i class="fa-solid fa-leaf mr-1"></i> 2. Hojas del Árbol (Efectos / Consecuencias)
+              </span>
+              <h3 class="text-base sm:text-lg font-extrabold text-slate-800 mt-1.5">¿Qué efectos ves cuando consumimos tanto papel?</h3>
+            </div>
+            <span id="selected-effects-badge" class="text-xs font-bold text-forest-700 bg-forest-50 px-3 py-1 rounded-full border border-forest-200">0 elegidas</span>
+          </div>
+
+          <div id="effects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+        </div>
+
+        <!-- PASO 3: FRASE / REFLEXIÓN OPCIONAL -->
+        <div class="bg-white rounded-2xl p-5 shadow-xs border border-slate-200">
+          <label for="voter-quote-input" class="block text-sm font-extrabold text-slate-800 mb-1">
+            <i class="fa-solid fa-comment-dots text-forest-600 mr-1"></i> ¿Alguna reflexión o frase corta sobre nuestro uso del papel? (Opcional)
+          </label>
+          <input type="text" id="voter-quote-input" maxlength="140" placeholder="Ej: «Imprimo por costumbre, pero casi todo lo podría revisar en pantalla»." class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-forest-500 mt-1" />
+        </div>
+
+        <!-- BOTÓN ENVIAR -->
+        <div class="bg-gradient-to-r from-forest-900 to-emerald-900 text-white p-5 rounded-2xl shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="text-xs sm:text-sm text-emerald-100 text-center sm:text-left">
+            <strong class="text-white">¡Listo para enviar!</strong> Tus opciones aparecerán como hojas y raíces en la pantalla principal.
+          </div>
+          <button id="submit-vote-btn" type="button" onclick="submitVote()" class="w-full sm:w-auto px-8 py-3.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2 text-base cursor-pointer">
+            <i class="fa-solid fa-paper-plane"></i> Enviar al Árbol
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VISTA 2: EL ÁRBOL GRÁFICO INTERACTIVO EN VIVO (PROTAGONISTA)      -->
+    <!-- ================================================================= -->
+    <section id="view-tree" class="hidden animate-fade-in">
+      
+      <!-- Barra de herramientas del Árbol -->
+      <div class="no-photo-mode no-print flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <div>
+          <h2 class="text-lg sm:text-xl font-black text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-tree text-forest-600"></i> Árbol de Problemas en Vivo
+          </h2>
+          <p class="text-xs text-slate-500">
+            Haz clic o pasa el cursor sobre cualquier <strong>hoja</strong> o <strong>raíz</strong> para inspeccionarla. Las hojas y raíces crecen con los votos.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="manualSyncNow()" id="sync-now-btn" class="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+            <i class="fa-solid fa-arrows-rotate text-sky-600"></i> Actualizar
+          </button>
+          <button onclick="togglePhotoMode(true)" class="px-4 py-2 bg-forest-700 hover:bg-forest-800 text-white rounded-xl text-xs font-bold shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+            <i class="fa-solid fa-camera"></i> Modo Foto / Captura Limpia
+          </button>
+        </div>
+      </div>
+
+      <!-- TARJETA PRINCIPAL DEL ÁRBOL GRÁFICO SVG -->
+      <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden relative">
+        
+        <!-- Encabezado visual dentro del lienzo del árbol (sale en la foto de evidencia) -->
+        <div class="bg-gradient-to-r from-sky-50 via-emerald-50 to-sky-50 border-b border-emerald-100 px-5 py-3.5 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-xl bg-forest-600 text-white flex items-center justify-center text-sm shadow-xs">
+              <i class="fa-solid fa-tree"></i>
+            </span>
+            <div>
+              <h3 class="text-sm sm:text-base font-black text-slate-800 leading-tight">Árbol de Problemas: Consumo de Papel y Tóner</h3>
+              <p class="text-[11px] text-slate-500 font-medium">Actividad 1 · Taller de Causas (Semana 3)</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 text-xs">
+            <span class="bg-white border border-slate-200 px-3 py-1 rounded-full font-bold text-slate-700 shadow-2xs">
+              <i class="fa-solid fa-users text-forest-600 mr-1"></i> Participantes: <span id="tree-canvas-votes" class="text-forest-700">0</span> / 12
+            </span>
+            <span class="bg-amber-50 border border-amber-200 px-3 py-1 rounded-full font-extrabold text-amber-900 shadow-2xs">
+              <i class="fa-solid fa-coins text-amber-500 mr-1"></i> Costo Mensual: <span id="tree-canvas-cost">$0</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- PANEL DETALLE INTERACTIVO AL HACER CLIC EN HOJA O RAÍZ -->
+        <div id="tree-inspector-bar" class="bg-slate-900 text-white px-5 py-2.5 text-xs sm:text-sm flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5 truncate">
+            <span id="inspector-badge" class="bg-emerald-500 text-slate-950 font-black text-[10px] uppercase px-2 py-0.5 rounded shrink-0">INFO</span>
+            <span id="inspector-text" class="font-medium truncate">Pasa el cursor o haz clic sobre cualquier hoja (efecto) o raíz (causa) del árbol para ver su detalle.</span>
+          </div>
+          <span id="inspector-votes" class="font-black text-amber-300 shrink-0"></span>
+        </div>
+
+        <!-- LIENZO SVG DEL ÁRBOL COMPLETO (COPA + TRONCO + TIERRA Y RAÍCES) -->
+        <div class="w-full overflow-x-auto bg-gradient-to-b from-sky-100/70 via-sky-50/40 to-amber-50/30">
+          <svg id="problem-tree-svg" viewBox="0 0 1200 940" class="w-full min-w-[760px] h-auto block select-none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Gradiente Cielo -->
+              <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#e0f2fe" />
+                <stop offset="100%" stop-color="#f0fdf4" />
+              </linearGradient>
+
+              <!-- Gradiente Copa Frondosa -->
+              <radialGradient id="canopyGrad" cx="50%" cy="40%" r="55%">
+                <stop offset="0%" stop-color="#4ade80" />
+                <stop offset="55%" stop-color="#16a34a" />
+                <stop offset="100%" stop-color="#14532d" />
+              </radialGradient>
+
+              <!-- Gradiente Tronco Madera -->
+              <linearGradient id="trunkGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#5c371f" />
+                <stop offset="35%" stop-color="#8c5832" />
+                <stop offset="70%" stop-color="#724526" />
+                <stop offset="100%" stop-color="#492b18" />
+              </linearGradient>
+
+              <!-- Gradiente Subsuelo / Tierra -->
+              <linearGradient id="soilGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#784b2a" />
+                <stop offset="25%" stop-color="#5c371f" />
+                <stop offset="100%" stop-color="#331d10" />
+              </linearGradient>
+
+              <!-- Gradiente Hoja Verde -->
+              <linearGradient id="leafGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#bbf7d0" />
+                <stop offset="50%" stop-color="#4ade80" />
+                <stop offset="100%" stop-color="#15803d" />
+              </linearGradient>
+
+              <!-- Gradiente Hoja Destacada (Más votada) -->
+              <linearGradient id="leafHotGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#fef08a" />
+                <stop offset="45%" stop-color="#4ade80" />
+                <stop offset="100%" stop-color="#166534" />
+              </linearGradient>
+
+              <!-- Sombra suave -->
+              <filter id="softShadow" x="-15%" y="-15%" width="130%" height="130%">
+                <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.22" />
+              </filter>
+            </defs>
+
+            <!-- FONDO CIELO (0 a 595) -->
+            <rect x="0" y="0" width="1200" height="595" fill="url(#skyGrad)" />
+
+            <!-- Nubes suaves decorativas -->
+            <g fill="#ffffff" opacity="0.65">
+              <ellipse cx="160" cy="95" rx="65" ry="24" />
+              <ellipse cx="205" cy="90" rx="50" ry="20" />
+              <ellipse cx="1020" cy="110" rx="75" ry="26" />
+              <ellipse cx="970" cy="105" rx="45" ry="18" />
+            </g>
+
+            <!-- ETIQUETA SUPERIOR: COPA / RAMAS (EFECTOS) -->
+            <g transform="translate(600, 34)">
+              <rect x="-215" y="-18" width="430" height="34" rx="17" fill="#14532d" opacity="0.9" />
+              <text x="0" y="4" text-anchor="middle" fill="#ecfdf5" font-size="13" font-weight="800" letter-spacing="1.2">
+                COPA Y HOJAS · EFECTOS Y CONSECUENCIAS
+              </text>
+            </g>
+
+            <!-- FRONDA DEL ÁRBOL (MASA DE FOLLAJE ORGÁNICO) -->
+            <g filter="url(#softShadow)">
+              <ellipse cx="600" cy="235" rx="455" ry="175" fill="url(#canopyGrad)" />
+              <circle cx="310" cy="255" r="135" fill="#15803d" opacity="0.85" />
+              <circle cx="890" cy="255" r="135" fill="#15803d" opacity="0.85" />
+              <circle cx="445" cy="155" r="125" fill="#22c55e" opacity="0.55" />
+              <circle cx="755" cy="155" r="125" fill="#22c55e" opacity="0.55" />
+              <circle cx="600" cy="130" r="130" fill="#4ade80" opacity="0.35" />
+            </g>
+
+            <!-- RAMAS INTERNAS DE MADERA QUE SOSTIENEN LA COPA -->
+            <g stroke="#5c371f" stroke-linecap="round" fill="none" opacity="0.85">
+              <path d="M565,410 Q460,330 310,270" stroke-width="22" />
+              <path d="M635,410 Q740,330 890,270" stroke-width="22" />
+              <path d="M590,395 Q520,270 440,175" stroke-width="16" />
+              <path d="M610,395 Q680,270 760,175" stroke-width="16" />
+              <path d="M600,390 L600,150" stroke-width="14" />
+            </g>
+
+            <!-- SUELO / CÉSPED Y SUBSUELO (585 a 940) -->
+            <rect x="0" y="592" width="1200" height="348" fill="url(#soilGrad)" />
+            <!-- Franja de césped verde en la superficie -->
+            <path d="M0,592 Q300,582 600,592 T1200,592 L1200,608 Q900,616 600,608 T0,608 Z" fill="#16a34a" />
+
+            <!-- ETIQUETA INFERIOR: SUBSUELO / RAÍCES (CAUSAS) -->
+            <g transform="translate(600, 634)">
+              <rect x="-225" y="-16" width="450" height="32" rx="16" fill="#291509" opacity="0.85" stroke="#d97706" stroke-width="1.5" />
+              <text x="0" y="4" text-anchor="middle" fill="#fef3c7" font-size="13" font-weight="800" letter-spacing="1.2">
+                RAÍCES BAJO TIERRA · CAUSAS DEL PROBLEMA (TOP 3 DESTACADAS)
+              </text>
+            </g>
+
+            <!-- GRUPO DINÁMICO DE RAÍCES (SE RENDERIZA CON JS) -->
+            <g id="svg-roots-layer"></g>
+
+            <!-- TRONCO CENTRAL DEL ÁRBOL -->
+            <g filter="url(#softShadow)">
+              <path d="M515,595 Q540,490 535,385 L665,385 Q660,490 685,595 Z" fill="url(#trunkGrad)" />
+              <!-- Textura de corteza -->
+              <path d="M565,410 Q572,495 560,580" stroke="#492b18" stroke-width="4" fill="none" opacity="0.5" stroke-linecap="round" />
+              <path d="M600,400 Q595,500 605,585" stroke="#492b18" stroke-width="5" fill="none" opacity="0.45" stroke-linecap="round" />
+              <path d="M635,415 Q628,495 640,575" stroke="#492b18" stroke-width="4" fill="none" opacity="0.5" stroke-linecap="round" />
+            </g>
+
+            <!-- CARTEL DE MADERA CLAVADO EN EL TRONCO (PROBLEMA CENTRAL + COSTO) -->
+            <g transform="translate(600, 488)" filter="url(#softShadow)">
+              <!-- Tablón principal -->
+              <rect x="-210" y="-66" width="420" height="132" rx="18" fill="#fffbeb" stroke="#78350f" stroke-width="5" />
+              <rect x="-202" y="-58" width="404" height="116" rx="13" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="6,4" />
+              
+              <!-- Clavos decorativos -->
+              <circle cx="-190" cy="-46" r="4.5" fill="#78350f" />
+              <circle cx="190" cy="-46" r="4.5" fill="#78350f" />
+              <circle cx="-190" cy="46" r="4.5" fill="#78350f" />
+              <circle cx="190" cy="46" r="4.5" fill="#78350f" />
+
+              <!-- Etiqueta Tronco -->
+              <rect x="-95" y="-78" width="190" height="24" rx="12" fill="#92400e" />
+              <text x="0" y="-62" text-anchor="middle" fill="#fef3c7" font-size="11" font-weight="900" letter-spacing="1">
+                PROBLEMA CENTRAL
+              </text>
+
+              <!-- Texto del problema -->
+              <text x="0" y="-26" text-anchor="middle" fill="#1e293b" font-size="17" font-weight="900">
+                Alto consumo de papel y tóner
+              </text>
+              <text x="0" y="-4" text-anchor="middle" fill="#475569" font-size="13" font-weight="600">
+                Línea de base: 4 a 5 resmas/mes (50–60 hojas/persona)
+              </text>
+
+              <!-- Pastilla de Costo Mensual Calculado -->
+              <rect x="-155" y="12" width="310" height="36" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2" />
+              <text x="0" y="35" text-anchor="middle" fill="#92400e" font-size="15" font-weight="900" id="svg-trunk-cost-text">
+                Costo mensual facturas: $0
+              </text>
+            </g>
+
+            <!-- GRUPO DINÁMICO DE HOJAS EN LA COPA (SE RENDERIZA CON JS) -->
+            <g id="svg-leaves-layer"></g>
+
+          </svg>
+        </div>
+
+        <!-- Leyenda inferior del gráfico -->
+        <div class="bg-slate-50 border-t border-slate-200 px-5 py-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-600">
+          <div class="flex flex-wrap items-center gap-4">
+            <span class="flex items-center gap-1.5">
+              <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 inline-block border border-emerald-700"></span>
+              <strong>Hojas verdes:</strong> Efectos votados (crecen con los votos)
+            </span>
+            <span class="flex items-center gap-1.5">
+              <span class="w-3.5 h-3.5 rounded-full bg-amber-400 inline-block border border-amber-700"></span>
+              <strong>Raíces doradas:</strong> Top 3 causas principales
+            </span>
+          </div>
+          <div class="font-semibold text-slate-500">
+            * Puedes usar <strong class="text-slate-700">Modo Foto</strong> arriba para tomar captura limpia para tu informe.
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- VISTA 3: RESUMEN DE EVIDENCIA, ODS Y GUÍA NETLIFY / NUBE          -->
+    <!-- ================================================================= -->
+    <section id="view-report" class="hidden animate-fade-in space-y-6">
+      
+      <!-- Bloque 1: Ficha de Resultados para entregar -->
+      <div class="bg-white rounded-2xl p-6 shadow-xs border border-slate-200">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-forest-700 bg-forest-100 px-2.5 py-1 rounded-md">
+              Resultados Listos para Entregar
+            </span>
+            <h2 class="text-xl font-black text-slate-800 mt-1">Sistematización del Taller (Semana 3)</h2>
+          </div>
+          <button onclick="copySummaryToClipboard()" class="px-5 py-2.5 bg-forest-600 hover:bg-forest-700 text-white text-sm font-bold rounded-xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-copy"></i> Copiar Resultados
+          </button>
+        </div>
+
+        <!-- KPIs -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-5">
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+            <div class="text-xs font-bold text-slate-500 uppercase">Asistentes Reales</div>
+            <div class="text-2xl font-black text-slate-800 mt-1">
+              <span id="report-votes">0</span> <span class="text-sm font-medium text-slate-500">/ 12 meta (30%)</span>
+            </div>
+            <div id="report-meta-status" class="text-xs font-semibold text-amber-600 mt-1">En progreso</div>
+          </div>
+
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+            <div class="text-xs font-bold text-slate-500 uppercase">Costo Mensual Calculado</div>
+            <div class="text-2xl font-black text-forest-700 mt-1" id="report-total-cost">$0</div>
+            <div class="text-xs text-slate-500 mt-1" id="report-cost-breakdown">Papel: $0 · Tóner: $0</div>
+          </div>
+
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+            <div class="text-xs font-bold text-slate-500 uppercase">Línea de Base</div>
+            <div class="text-lg font-extrabold text-slate-800 mt-1">4 a 5 resmas / mes</div>
+            <div class="text-xs text-slate-500 mt-1">50 a 60 hojas por persona</div>
+          </div>
+        </div>
+
+        <!-- Top 3 Causas y Frases recogidas -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-5">
+            <h3 class="text-base font-extrabold text-amber-950 flex items-center gap-2 mb-3">
+              <i class="fa-solid fa-trophy text-amber-500"></i> Las 3 Causas Principales (Raíces Top)
+            </h3>
+            <ol id="report-top3-list" class="space-y-2.5 text-sm"></ol>
+          </div>
+
+          <div class="bg-sky-50/70 border border-sky-200 rounded-2xl p-5 flex flex-col justify-between">
+            <div>
+              <label for="participant-quote" class="text-base font-extrabold text-slate-800 flex items-center gap-2 mb-1">
+                <i class="fa-solid fa-quote-left text-sky-600"></i> Frase destacada de un participante
+              </label>
+              <p class="text-xs text-slate-600 mb-2">
+                Si los participantes enviaron frases al votar, aparecerán abajo para que elijas o edites la mejor:
+              </p>
+              <textarea id="participant-quote" rows="2" oninput="saveQuote()" placeholder="Escribe o selecciona una frase de un participante..." class="w-full rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-600"></textarea>
+              <div id="submitted-quotes-chips" class="flex flex-wrap gap-1.5 mt-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloque 2: Guía rápida para desplegar en Netlify + Conectar Nube Gratis -->
+      <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-6 shadow-md">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/10">
+          <div>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider bg-sky-500/20 text-sky-300 border border-sky-400/30 px-2.5 py-0.5 rounded-full">
+              Despliegue en Vivo · Paso a Paso (3 minutos)
+            </span>
+            <h3 class="text-lg sm:text-xl font-black mt-1">¿Cómo lanzar esto en Netlify y recibir votos en vivo desde cada puesto?</h3>
+          </div>
+          <button onclick="openCloudModal()" class="px-4 py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-xs sm:text-sm rounded-xl transition shrink-0 cursor-pointer">
+            <i class="fa-solid fa-plug mr-1"></i> Configurar URL de Nube ahora
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5 text-xs sm:text-sm">
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+            <div class="font-black text-amber-300 mb-1">Paso 1 · Base de datos gratis (Firebase)</div>
+            <p class="text-slate-300 leading-relaxed">
+              Entra a <strong>console.firebase.google.com</strong>, crea un proyecto gratis, ve a <strong>Compilación → Realtime Database → Crear base de datos</strong> en <em>Modo de prueba</em> y copia la URL (ej: <code class="text-sky-300">https://tu-proyecto.firebaseio.com</code>).
+            </p>
+          </div>
+
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+            <div class="font-black text-emerald-300 mb-1">Paso 2 · Subir a Netlify Drop</div>
+            <p class="text-slate-300 leading-relaxed">
+              Guarda este archivo como <code class="text-emerald-300">index.html</code>, entra a <strong>app.netlify.com/drop</strong> y arrastra la carpeta con el archivo. En 5 segundos tendrás tu link público (ej: <code class="text-emerald-300">taller-papel.netlify.app</code>).
+            </p>
+          </div>
+
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+            <div class="font-black text-sky-300 mb-1">Paso 3 · Compartir enlace conectado</div>
+            <p class="text-slate-300 leading-relaxed">
+              Abre tu link de Netlify, haz clic arriba en <strong>"Nube / Link"</strong>, pega la URL de Firebase y pulsa <strong>"Copiar enlace listo para participantes"</strong>. ¡Al abrirlo en sus puestos votarán en vivo!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloque 3: Aporte a los ODS -->
+      <div class="bg-white rounded-2xl p-6 shadow-xs border border-slate-200">
+        <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-earth-americas text-forest-600"></i> Aporte a los Objetivos de Desarrollo Sostenible (ODS)
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="rounded-2xl border border-amber-200 bg-amber-50/40 p-4">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="w-10 h-10 rounded-xl bg-amber-600 text-white font-black flex items-center justify-center shrink-0">12</span>
+              <div>
+                <div class="text-[11px] font-bold uppercase text-amber-700">ODS 12 · Meta 12.5</div>
+                <div class="font-extrabold text-slate-800 text-sm">Producción y consumo responsables</div>
+              </div>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Hace visible el consumo de papel y apunta a reducir desechos mediante la <strong>prevención</strong> (Naciones Unidas, 2015).
+            </p>
+          </div>
+
+          <div class="rounded-2xl border border-red-200 bg-red-50/40 p-4">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="w-10 h-10 rounded-xl bg-red-700 text-white font-black flex items-center justify-center shrink-0">4</span>
+              <div>
+                <div class="text-[11px] font-bold uppercase text-red-700">ODS 4 · Meta 4.7</div>
+                <div class="font-extrabold text-slate-800 text-sm">Educación de calidad</div>
+              </div>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              El taller es <strong>educación ambiental práctica</strong> para que las personas adquieran conocimientos para el desarrollo sostenible.
+            </p>
+          </div>
+
+          <div class="rounded-2xl border border-forest-200 bg-forest-50/40 p-4">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="w-10 h-10 rounded-xl bg-forest-600 text-white font-black flex items-center justify-center shrink-0">15</span>
+              <div>
+                <div class="text-[11px] font-bold uppercase text-forest-700">ODS 15</div>
+                <div class="font-extrabold text-slate-800 text-sm">Vida de ecosistemas terrestres</div>
+              </div>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              El papel viene de fibra de árboles; imprimir menos alivia la presión sobre los <strong>bosques</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- =================================================================== -->
+  <!-- MODAL 1: CONECTAR NUBE EN VIVO (FIREBASE / GOOGLE SHEETS) Y LINK    -->
+  <!-- =================================================================== -->
+  <div id="cloud-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl animate-fade-in">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-lg font-black text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-cloud-arrow-up text-sky-600"></i> Sincronización en Vivo (Netlify)
+        </h3>
+        <button onclick="closeCloudModal()" class="text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="mt-3 space-y-4 text-xs sm:text-sm">
+        <p class="text-slate-600">
+          Para que los votos de cada compañero en su puesto lleguen en vivo a tu pantalla desde Netlify, pega la URL de tu <strong>Firebase Realtime Database</strong> (o Google Apps Script):
+        </p>
+
+        <div>
+          <label for="cloud-url-input" class="block text-xs font-extrabold uppercase text-slate-700 mb-1">
+            URL de Firebase Realtime Database o Google Apps Script
+          </label>
+          <input type="url" id="cloud-url-input" placeholder="https://tu-proyecto-default-rtdb.firebaseio.com" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500" />
+          <p class="text-[11px] text-slate-400 mt-1">
+            * En Firebase Realtime Database asegúrate de que las reglas estén en <code>".read": true, ".write": true</code> durante el taller.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          <button onclick="saveCloudConfig()" class="flex-1 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl shadow transition cursor-pointer">
+            <i class="fa-solid fa-link mr-1"></i> Conectar Nube
+          </button>
+          <button onclick="disconnectCloud()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition cursor-pointer">
+            Usar solo local
+          </button>
+        </div>
+
+        <!-- Enlace mágico listo para compartir con los participantes -->
+        <div id="share-link-box" class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 space-y-2">
+          <div class="font-extrabold text-emerald-900 text-xs flex items-center gap-1.5">
+            <i class="fa-solid fa-share-nodes text-emerald-600"></i> Enlace automático para tus participantes (WhatsApp / Teams)
+          </div>
+          <p class="text-[11px] text-emerald-800">
+            Este enlace incluye la conexión incluida para que tus compañeros solo abran y voten sin configurar nada:
+          </p>
+          <div class="flex gap-2">
+            <input type="text" id="shareable-url-output" readonly class="flex-grow bg-white border border-emerald-300 rounded-lg px-2.5 py-1.5 text-[11px] font-mono text-slate-700" />
+            <button onclick="copyShareableLink()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shrink-0 cursor-pointer">
+              Copiar Link
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- MODAL 2: CALCULADORA DE FACTURAS (PAPEL Y TÓNER)                    -->
+  <!-- =================================================================== -->
+  <div id="cost-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl animate-fade-in">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-lg font-black text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-file-invoice-dollar text-amber-500"></i> Costo Mensual de Facturas
+        </h3>
+        <button onclick="closeCostModal()" class="text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-500 mt-2">
+        El resultado aparecerá grabado en el <strong>tronco del árbol</strong> y se sincronizará con todos los dispositivos.
+      </p>
+
+      <div class="space-y-4 mt-4">
+        <div>
+          <label for="input-paper-cost" class="block text-xs font-extrabold uppercase text-slate-600 mb-1">
+            Facturas mensuales de Papel / Resmas ($)
+          </label>
+          <input type="number" id="input-paper-cost" min="0" step="100" placeholder="Ej: 125000" oninput="updateModalPreview()" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-forest-500" />
+        </div>
+
+        <div>
+          <label for="input-toner-cost" class="block text-xs font-extrabold uppercase text-slate-600 mb-1">
+            Facturas mensuales de Tóner / Tinta ($)
+          </label>
+          <input type="number" id="input-toner-cost" min="0" step="100" placeholder="Ej: 280000" oninput="updateModalPreview()" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-forest-500" />
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex items-center justify-between">
+          <span class="text-sm font-bold text-amber-950">Total Mensual:</span>
+          <span id="modal-cost-preview" class="text-xl font-black text-amber-800">$0</span>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeCostModal()" class="px-4 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer">
+          Cancelar
+        </button>
+        <button onclick="saveCostData()" class="px-5 py-2 text-sm font-bold bg-forest-600 hover:bg-forest-700 text-white rounded-xl shadow cursor-pointer">
+          Actualizar Tronco
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- MODAL 3: REINICIAR DATOS                                            -->
+  <!-- =================================================================== -->
+  <div id="reset-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl animate-fade-in">
+      <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xl mb-3">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h3 class="text-lg font-black text-slate-800">¿Reiniciar el taller a cero?</h3>
+      <p class="text-sm text-slate-600 mt-1">
+        Se borrarán los votos acumulados (tanto en local como en la nube conectada) para iniciar la sesión limpia.
+      </p>
+      <div class="mt-5 flex justify-end gap-2">
+        <button onclick="closeResetModal()" class="px-4 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer">
+          Cancelar
+        </button>
+        <button onclick="confirmResetAll()" class="px-4 py-2 text-sm font-bold bg-red-600 hover:bg-red-700 text-white rounded-xl shadow cursor-pointer">
+          Sí, reiniciar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- JAVASCRIPT: MOTOR DEL ÁRBOL GRÁFICO Y SINCRONIZACIÓN EN LA NUBE     -->
+  <!-- =================================================================== -->
+  <script>
+    const STORAGE_KEY = 'taller_arbol_grafico_v2';
+    const CLOUD_URL_KEY = 'taller_arbol_cloud_url_v2';
+
+    // Canal entre pestañas del mismo navegador
+    const bc = ('BroadcastChannel' in window) ? new BroadcastChannel('taller_arbol_channel') : null;
+
+    // Catálogo base de Causas (Raíces) y Efectos (Hojas)
+    const BASE_CAUSES = [
+      { id: 'c1', short: 'Imprimir «por si acaso»', text: 'Imprimir «por si acaso» o para tener respaldo físico', icon: 'fa-shield-halved' },
+      { id: 'c2', short: 'Revisar y corregir en papel', text: 'Revisar, leer y corregir documentos en papel', icon: 'fa-glasses' },
+      { id: 'c3', short: 'No usar doble cara', text: 'No configurar la impresión a doble cara (dúplex)', icon: 'fa-copy' },
+      { id: 'c4', short: 'Firmas y trámites físicos', text: 'Trámites internos o firmas que exigen hoja física', icon: 'fa-file-signature' },
+      { id: 'c5', short: 'Errores de margen / formato', text: 'Errores de configuración que dañan hojas al imprimir', icon: 'fa-triangle-exclamation' },
+      { id: 'c6', short: 'Falta de segunda pantalla', text: 'Falta de pantalla adicional o costumbre digital', icon: 'fa-desktop' }
+    ];
+
+    const BASE_EFFECTS = [
+      { id: 'e1', short: 'Alto gasto en papel y tóner', text: 'Alto gasto mensual en resmas de papel y tóner', icon: 'fa-money-bill-wave' },
+      { id: 'e2', short: 'Desorden y archivo acumulado', text: 'Acumulación de archivo físico y desorden en puestos', icon: 'fa-boxes-stacked' },
+      { id: 'e3', short: 'Tala de árboles y residuos', text: 'Mayor generación de residuos y presión sobre los bosques', icon: 'fa-tree' },
+      { id: 'e4', short: 'Tiempo perdido buscando hojas', text: 'Pérdida de tiempo buscando o archivando documentos', icon: 'fa-clock' },
+      { id: 'e5', short: 'Hojas olvidadas en bandeja', text: 'Impresiones abandonadas en la bandeja de la impresora', icon: 'fa-print' },
+      { id: 'e6', short: 'Demoras en flujos de trabajo', text: 'Procesos más lentos al depender de firmas en papel', icon: 'fa-hourglass-half' }
+    ];
+
+    // Estado consolidado calculado desde los votos individuales
+    let state = {
+      paperCost: 0,
+      tonerCost: 0,
+      selectedQuote: '',
+      votesList: [], // Cada voto es un objeto { id, name, causes: [], effects: [], customCauses: [], quote, ts }
+      customCausesPool: [] // Causas nuevas creadas por participantes
+    };
+
+    let selectedCauses = new Set();
+    let selectedEffects = new Set();
+    let cloudUrl = '';
+    let syncIntervalId = null;
+
+    // 1. Detectar parámetro ?db= en la URL (para enlaces compartidos por WhatsApp/Teams)
+    function initCloudConfig() {
+      const params = new URLSearchParams(window.location.search);
+      const dbFromUrl = params.get('db');
+      if (dbFromUrl) {
+        cloudUrl = normalizeCloudUrl(dbFromUrl);
+        localStorage.setItem(CLOUD_URL_KEY, cloudUrl);
+      } else {
+        cloudUrl = localStorage.getItem(CLOUD_URL_KEY) || '';
+      }
+      updateCloudBadgeUI();
+      startPollingIfNeeded();
+    }
+
+    function normalizeCloudUrl(url) {
+      let clean = (url || '').trim();
+      if (!clean) return '';
+      // Si es Firebase Realtime Database sin .json, dejamos la base limpia
+      if (clean.endsWith('/')) clean = clean.slice(0, -1);
+      if (clean.endsWith('.json')) clean = clean.replace(/\/taller_arbol\.json$/, '').replace(/\.json$/, '');
+      return clean;
+    }
+
+    function isFirebaseUrl(url) {
+      return url.includes('firebaseio.com') || url.includes('firebasedatabase.app');
+    }
+
+    // 2. Cargar datos iniciales (local + nube si está configurada)
+    async function loadInitialData() {
+      try {
+        const localSaved = localStorage.getItem(STORAGE_KEY);
+        if (localSaved) {
+          state = { ...state, ...JSON.parse(localSaved) };
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      updateAllUI();
+
+      if (cloudUrl) {
+        await pullFromCloud(true);
+      }
+    }
+
+    function saveLocalState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        if (bc) bc.postMessage({ type: 'SYNC_STATE', state });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    if (bc) {
+      bc.onmessage = (ev) => {
+        if (ev.data && ev.data.type === 'SYNC_STATE') {
+          state = ev.data.state;
+          updateAllUI();
+        }
+      };
+    }
+
+    // 3. Sincronización Real con la Nube (Firebase Realtime Database REST o Google Apps Script)
+    async function pullFromCloud(silent = false) {
+      if (!cloudUrl) return;
+      try {
+        let fetchUrl = isFirebaseUrl(cloudUrl)
+          ? `${cloudUrl}/taller_arbol_papel.json`
+          : cloudUrl;
+
+        const resp = await fetch(fetchUrl, { cache: 'no-store' });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+
+        if (data) {
+          // Convertir diccionario de votos de Firebase en arreglo
+          const votesObj = data.votes || {};
+          const votesArr = Array.isArray(votesObj) ? votesObj.filter(Boolean) : Object.values(votesObj);
+
+          const customObj = data.customCauses || {};
+          const customArr = Array.isArray(customObj) ? customObj.filter(Boolean) : Object.values(customObj);
+
+          state.votesList = votesArr;
+          state.customCausesPool = customArr;
+          if (data.meta) {
+            state.paperCost = Number(data.meta.paperCost) || 0;
+            state.tonerCost = Number(data.meta.tonerCost) || 0;
+            if (data.meta.selectedQuote !== undefined) {
+              state.selectedQuote = data.meta.selectedQuote;
+            }
+          }
+          saveLocalState();
+          updateAllUI();
+          if (!silent) showToast('Árbol sincronizado desde la nube.');
+        }
+      } catch (err) {
+        console.warn('Error sincronizando nube:', err);
+        if (!silent) showToast('No se pudo conectar a la URL de la nube. Revisa permisos.', 'warn');
+      }
+    }
+
+    async function pushVoteToCloud(voteObj) {
+      if (!cloudUrl) return true;
+      try {
+        if (isFirebaseUrl(cloudUrl)) {
+          // POST en Firebase Realtime Database crea un ID único sin pisar votos simultáneos
+          const resp = await fetch(`${cloudUrl}/taller_arbol_papel/votes.json`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(voteObj)
+          });
+          if (!resp.ok) throw new Error('Error Firebase POST');
+        } else {
+          // Google Apps Script Web App
+          await fetch(cloudUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'addVote', vote: voteObj })
+          });
+        }
+        return true;
+      } catch (err) {
+        console.error('Error enviando voto a nube:', err);
+        showToast('Guardado localmente, pero falló el envío a la nube.', 'warn');
+        return false;
+      }
+    }
+
+    async function pushCustomCauseToCloud(causeObj) {
+      if (!cloudUrl) return;
+      try {
+        if (isFirebaseUrl(cloudUrl)) {
+          await fetch(`${cloudUrl}/taller_arbol_papel/customCauses/${causeObj.id}.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(causeObj)
+          });
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    async function pushMetaToCloud() {
+      if (!cloudUrl) return;
+      try {
+        if (isFirebaseUrl(cloudUrl)) {
+          await fetch(`${cloudUrl}/taller_arbol_papel/meta.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              paperCost: state.paperCost,
+              tonerCost: state.tonerCost,
+              selectedQuote: state.selectedQuote
+            })
+          });
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    function startPollingIfNeeded() {
+      if (syncIntervalId) clearInterval(syncIntervalId);
+      if (cloudUrl) {
+        // Consultar nuevos votos cada 4 segundos para animación en vivo
+        syncIntervalId = setInterval(() => pullFromCloud(true), 4000);
+      }
+    }
+
+    async function manualSyncNow() {
+      if (!cloudUrl) {
+        showToast('Estás en Modo Local. Conecta una nube para recibir votos remotos.', 'warn');
+        return;
+      }
+      const btn = document.getElementById('sync-now-btn');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-sky-600"></i> Sincronizando...';
+      await pullFromCloud(false);
+      btn.innerHTML = '<i class="fa-solid fa-arrows-rotate text-sky-600"></i> Actualizar';
+    }
+
+    // 4. Calcular conteos consolidados a partir de votesList
+    function getAggregatedData() {
+      const allCausesMap = new Map();
+      BASE_CAUSES.forEach(c => allCausesMap.set(c.id, { ...c, votes: 0 }));
+      (state.customCausesPool || []).forEach(c => {
+        if (!allCausesMap.has(c.id)) {
+          allCausesMap.set(c.id, { ...c, votes: 0 });
+        }
+      });
+
+      const allEffectsMap = new Map();
+      BASE_EFFECTS.forEach(e => allEffectsMap.set(e.id, { ...e, votes: 0 }));
+
+      const quotes = [];
+
+      (state.votesList || []).forEach(v => {
+        (v.causes || []).forEach(cid => {
+          if (allCausesMap.has(cid)) {
+            allCausesMap.get(cid).votes += 1;
+          }
+        });
+        (v.effects || []).forEach(eid => {
+          if (allEffectsMap.has(eid)) {
+            allEffectsMap.get(eid).votes += 1;
+          }
+        });
+        if (v.quote && v.quote.trim()) {
+          quotes.push({ author: v.name || 'Participante', text: v.quote.trim() });
+        }
+      });
+
+      return {
+        totalVoters: (state.votesList || []).length,
+        causes: Array.from(allCausesMap.values()),
+        effects: Array.from(allEffectsMap.values()),
+        quotes
+      };
+    }
+
+    // ===================================================================
+    // RENDERIZADO DEL ÁRBOL GRÁFICO SVG (HOJAS + TRONCO + RAÍCES)
+    // ===================================================================
+    function renderGraphicalTree() {
+      const agg = getAggregatedData();
+      const totalVoters = agg.totalVoters;
+      const totalCost = (Number(state.paperCost) || 0) + (Number(state.tonerCost) || 0);
+
+      // Actualizar textos del encabezado del lienzo y cartel del tronco
+      document.getElementById('tree-canvas-votes').textContent = totalVoters;
+      document.getElementById('tree-canvas-cost').textContent = formatCurrency(totalCost);
+      document.getElementById('svg-trunk-cost-text').textContent = `Costo mensual facturas: ${formatCurrency(totalCost)}`;
+
+      // 1) RENDERIZAR HOJAS EN LA COPA DEL ÁRBOL (EFECTOS)
+      const leavesLayer = document.getElementById('svg-leaves-layer');
+      const sortedEffects = [...agg.effects].sort((a, b) => b.votes - a.votes);
+
+      // Coordenadas distribuidas orgánicamente dentro de la copa verde
+      const leafPositions = [
+        { x: 600, y: 125, rot: 0 },
+        { x: 380, y: 175, rot: -10 },
+        { x: 820, y: 175, rot: 10 },
+        { x: 245, y: 275, rot: -16 },
+        { x: 955, y: 275, rot: 16 },
+        { x: 455, y: 285, rot: -5 },
+        { x: 745, y: 285, rot: 5 }
+      ];
+
+      leavesLayer.innerHTML = sortedEffects.slice(0, leafPositions.length).map((eff, idx) => {
+        const pos = leafPositions[idx];
+        // Escala dinámica de la hoja según los votos (entre 0.92 y 1.24)
+        const ratio = totalVoters > 0 ? (eff.votes / totalVoters) : 0;
+        const scale = (0.94 + ratio * 0.28).toFixed(2);
+        const isHot = eff.votes > 0 && idx < 2;
+        const shortLabel = truncateText(eff.short || eff.text, 26);
+
+        return `
+          <g transform="translate(${pos.x}, ${pos.y}) scale(${scale})"
+             class="cursor-pointer transition-transform duration-300"
+             onclick="inspectNode('HOJA · EFECTO', '${escapeAttr(eff.text)}', ${eff.votes}, ${totalVoters})"
+             onmouseenter="inspectNode('HOJA · EFECTO', '${escapeAttr(eff.text)}', ${eff.votes}, ${totalVoters})">
+            <g class="leaf-sway" style="animation-delay: ${idx * 0.45}s">
+              <!-- Tallo de la hoja -->
+              <path d="M0,-44 L0,-30" stroke="#14532d" stroke-width="3.5" stroke-linecap="round" />
+              <!-- Silueta de Hoja Orgánica -->
+              <path d="M0,-32 C72,-32 118,-10 118,14 C118,38 72,56 0,56 C-72,56 -118,38 -118,14 C-118,-10 -72,-32 0,-32 Z"
+                    fill="${isHot ? 'url(#leafHotGrad)' : 'url(#leafGrad)'}"
+                    stroke="${isHot ? '#fef08a' : '#14532d'}"
+                    stroke-width="${isHot ? '3' : '2'}"
+                    filter="url(#softShadow)" />
+              <!-- Nervadura central sutil -->
+              <path d="M-95,12 Q0,6 95,12" stroke="#14532d" stroke-width="1.2" opacity="0.25" fill="none" />
+              <!-- Texto dentro de la hoja -->
+              <text x="0" y="7" text-anchor="middle" fill="#052e16" font-size="12.5" font-weight="800">
+                ${escapeXML(shortLabel)}
+              </text>
+              <!-- Insignia de votos -->
+              <rect x="-42" y="18" width="84" height="22" rx="11" fill="#052e16" opacity="0.88" />
+              <text x="0" y="33" text-anchor="middle" fill="${isHot ? '#fde047' : '#bbf7d0'}" font-size="11.5" font-weight="900">
+                ${eff.votes} voto${eff.votes === 1 ? '' : 's'}
+              </text>
+            </g>
+          </g>
+        `;
+      }).join('');
+
+      // 2) RENDERIZAR RAÍCES BAJO TIERRA (CAUSAS)
+      const rootsLayer = document.getElementById('svg-roots-layer');
+      const sortedCauses = [...agg.causes].sort((a, b) => b.votes - a.votes);
+      const visibleCauses = sortedCauses.slice(0, 6);
+
+      // Posiciones de las 6 raíces principales ramificándose desde la base del tronco (600, 595)
+      const rootSlots = [
+        { startX: 535, endX: 145, endY: 745, ctrlX: 350, ctrlY: 640 },
+        { startX: 665, endX: 1055, endY: 745, ctrlX: 850, ctrlY: 640 },
+        { startX: 555, endX: 345, endY: 855, ctrlX: 430, ctrlY: 720 },
+        { startX: 645, endX: 855, endY: 855, ctrlX: 770, ctrlY: 720 },
+        { startX: 585, endX: 495, endY: 740, ctrlX: 525, ctrlY: 665 },
+        { startX: 615, endX: 705, endY: 740, ctrlX: 675, ctrlY: 665 }
+      ];
+
+      rootsLayer.innerHTML = visibleCauses.map((cause, idx) => {
+        const slot = rootSlots[idx];
+        const isTop3 = idx < 3 && cause.votes > 0;
+        const strokeW = isTop3 ? (22 - idx * 2) : 13;
+        const rootColor = isTop3 ? '#f59e0b' : '#a16207';
+        const shortLabel = truncateText(cause.short || cause.text, 25);
+
+        return `
+          <g class="cursor-pointer ${isTop3 ? 'top-root-glow' : ''}"
+             onclick="inspectNode('${isTop3 ? `TOP #${idx + 1} CAUSA` : 'RAÍZ · CAUSA'}', '${escapeAttr(cause.text)}', ${cause.votes}, ${totalVoters})"
+             onmouseenter="inspectNode('${isTop3 ? `TOP #${idx + 1} CAUSA` : 'RAÍZ · CAUSA'}', '${escapeAttr(cause.text)}', ${cause.votes}, ${totalVoters})">
+            
+            <!-- Ramificación orgánica de la raíz desde el tronco -->
+            <path d="M${slot.startX},595 Q${slot.ctrlX},${slot.ctrlY} ${slot.endX},${slot.endY}"
+                  stroke="${rootColor}"
+                  stroke-width="${strokeW}"
+                  stroke-linecap="round"
+                  fill="none" />
+            <!-- Terminación fina de raíz -->
+            <path d="M${slot.endX},${slot.endY} Q${slot.endX + (slot.endX < 600 ? -35 : 35)},${slot.endY + 38} ${slot.endX + (slot.endX < 600 ? -15 : 15)},${slot.endY + 55}"
+                  stroke="${rootColor}"
+                  stroke-width="6"
+                  stroke-linecap="round"
+                  fill="none"
+                  opacity="0.8" />
+
+            <!-- Nódulo / Etiqueta de la Causa en la Raíz -->
+            <g transform="translate(${slot.endX}, ${slot.endY})" filter="url(#softShadow)">
+              <rect x="-112" y="-28" width="224" height="58" rx="16"
+                    fill="${isTop3 ? '#fffbeb' : '#f5ebe0'}"
+                    stroke="${isTop3 ? '#f59e0b' : '#9c6644'}"
+                    stroke-width="${isTop3 ? '3.5' : '2'}" />
+
+              <!-- Medalla Top 3 si aplica -->
+              ${
+                isTop3
+                  ? `<g transform="translate(-88, -28)">
+                       <rect x="-24" y="-11" width="76" height="22" rx="11" fill="#d97706" />
+                       <text x="14" y="4" text-anchor="middle" fill="#ffffff" font-size="10.5" font-weight="900">
+                         ★ TOP #${idx + 1}
+                       </text>
+                     </g>`
+                  : ''
+              }
+
+              <!-- Texto de la causa -->
+              <text x="0" y="-4" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="800">
+                ${escapeXML(shortLabel)}
+              </text>
+
+              <!-- Contador de votos -->
+              <rect x="-42" y="6" width="84" height="19" rx="9.5" fill="${isTop3 ? '#92400e' : '#5c371f'}" />
+              <text x="0" y="19" text-anchor="middle" fill="${isTop3 ? '#fde047' : '#f5ebe0'}" font-size="11" font-weight="900">
+                ${cause.votes} voto${cause.votes === 1 ? '' : 's'}
+              </text>
+            </g>
+          </g>
+        `;
+      }).join('');
+    }
+
+    // Mostrar detalle en la barra negra superior del árbol al tocar hoja o raíz
+    function inspectNode(badge, fullText, votes, totalVoters) {
+      const pct = totalVoters > 0 ? Math.round((votes / totalVoters) * 100) : 0;
+      const badgeEl = document.getElementById('inspector-badge');
+      badgeEl.textContent = badge;
+      badgeEl.className = badge.includes('TOP')
+        ? 'bg-amber-400 text-slate-950 font-black text-[10px] uppercase px-2.5 py-0.5 rounded shrink-0'
+        : 'bg-emerald-400 text-slate-950 font-black text-[10px] uppercase px-2.5 py-0.5 rounded shrink-0';
+
+      document.getElementById('inspector-text').textContent = fullText;
+      document.getElementById('inspector-votes').textContent = `${votes} votos (${pct}%)`;
+    }
+
+    // ===================================================================
+    // RENDERIZADO DE VOTACIÓN (VISTA 1) Y RESUMEN (VISTA 3)
+    // ===================================================================
+    function renderVotingCards() {
+      const agg = getAggregatedData();
+
+      const causesGrid = document.getElementById('causes-grid');
+      causesGrid.innerHTML = agg.causes.map(cause => {
+        const isSel = selectedCauses.has(cause.id);
+        return `
+          <div onclick="toggleCause('${cause.id}')" class="cursor-pointer rounded-2xl p-3.5 border-2 transition-all select-none flex items-start gap-3 ${
+            isSel ? 'border-earth-600 bg-earth-50 shadow-xs' : 'border-slate-200 bg-white hover:border-earth-200'
+          }">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+              isSel ? 'bg-earth-700 text-white' : 'bg-slate-100 text-slate-600'
+            }">
+              <i class="fa-solid ${cause.icon || 'fa-seedling'}"></i>
+            </div>
+            <div>
+              <p class="text-xs sm:text-sm font-bold text-slate-800 leading-snug">${escapeHTML(cause.text)}</p>
+              <span class="inline-block mt-1 text-[11px] font-semibold ${isSel ? 'text-earth-700' : 'text-slate-400'}">
+                ${isSel ? '<i class="fa-solid fa-check mr-1"></i> Raíz marcada' : 'Toca para elegir'}
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const effectsGrid = document.getElementById('effects-grid');
+      effectsGrid.innerHTML = agg.effects.map(eff => {
+        const isSel = selectedEffects.has(eff.id);
+        return `
+          <div onclick="toggleEffect('${eff.id}')" class="cursor-pointer rounded-2xl p-3.5 border-2 transition-all select-none flex items-start gap-3 ${
+            isSel ? 'border-forest-600 bg-forest-50 shadow-xs' : 'border-slate-200 bg-white hover:border-forest-200'
+          }">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+              isSel ? 'bg-forest-600 text-white' : 'bg-slate-100 text-slate-600'
+            }">
+              <i class="fa-solid ${eff.icon || 'fa-leaf'}"></i>
+            </div>
+            <div>
+              <p class="text-xs sm:text-sm font-bold text-slate-800 leading-snug">${escapeHTML(eff.text)}</p>
+              <span class="inline-block mt-1 text-[11px] font-semibold ${isSel ? 'text-forest-700' : 'text-slate-400'}">
+                ${isSel ? '<i class="fa-solid fa-check mr-1"></i> Hoja marcada' : 'Toca para elegir'}
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('selected-causes-badge').textContent = `${selectedCauses.size} elegida${selectedCauses.size === 1 ? '' : 's'}`;
+      document.getElementById('selected-effects-badge').textContent = `${selectedEffects.size} elegida${selectedEffects.size === 1 ? '' : 's'}`;
+    }
+
+    function toggleCause(id) {
+      selectedCauses.has(id) ? selectedCauses.delete(id) : selectedCauses.add(id);
+      renderVotingCards();
+    }
+
+    function toggleEffect(id) {
+      selectedEffects.has(id) ? selectedEffects.delete(id) : selectedEffects.add(id);
+      renderVotingCards();
+    }
+
+    async function addCustomCause() {
+      const input = document.getElementById('custom-cause-input');
+      const text = input.value.trim();
+      if (!text) {
+        showToast('Escribe primero la causa que deseas agregar.', 'warn');
+        return;
+      }
+      const newCause = {
+        id: 'c_custom_' + Date.now(),
+        short: truncateText(text, 26),
+        text: text,
+        icon: 'fa-pen-nib'
+      };
+      state.customCausesPool.push(newCause);
+      selectedCauses.add(newCause.id);
+      input.value = '';
+      saveLocalState();
+      renderVotingCards();
+      await pushCustomCauseToCloud(newCause);
+      showToast('Nueva raíz agregada y marcada.');
+    }
+
+    async function submitVote() {
+      if (selectedCauses.size === 0 && selectedEffects.size === 0) {
+        showToast('Selecciona al menos una causa o un efecto.', 'warn');
+        return;
+      }
+
+      const btn = document.getElementById('submit-vote-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando al árbol...';
+
+      const voteObj = {
+        id: 'v_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        name: document.getElementById('voter-name').value.trim() || 'Participante',
+        causes: Array.from(selectedCauses),
+        effects: Array.from(selectedEffects),
+        quote: document.getElementById('voter-quote-input').value.trim(),
+        ts: Date.now()
+      };
+
+      state.votesList.push(voteObj);
+      if (voteObj.quote && !state.selectedQuote) {
+        state.selectedQuote = voteObj.quote;
+      }
+      saveLocalState();
+      await pushVoteToCloud(voteObj);
+
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar al Árbol';
+
+      updateAllUI();
+      document.getElementById('vote-form-container').classList.add('hidden');
+      document.getElementById('vote-success-screen').classList.remove('hidden');
+      showToast('¡Voto enviado al Árbol de Problemas!');
+    }
+
+    function resetVoteFormForNextPerson() {
+      selectedCauses.clear();
+      selectedEffects.clear();
+      document.getElementById('voter-name').value = '';
+      document.getElementById('voter-quote-input').value = '';
+      renderVotingCards();
+      document.getElementById('vote-success-screen').classList.add('hidden');
+      document.getElementById('vote-form-container').classList.remove('hidden');
+    }
+
+    function renderReport() {
+      const agg = getAggregatedData();
+      const totalVoters = agg.totalVoters;
+      const paper = Number(state.paperCost) || 0;
+      const toner = Number(state.tonerCost) || 0;
+      const totalCost = paper + toner;
+
+      document.getElementById('report-votes').textContent = totalVoters;
+      const metaEl = document.getElementById('report-meta-status');
+      if (totalVoters >= 12) {
+        metaEl.textContent = '¡Meta alcanzada! (12 o más participantes)';
+        metaEl.className = 'text-xs font-bold text-forest-600 mt-1';
+      } else {
+        metaEl.textContent = `Faltan ${12 - totalVoters} participantes para la meta de 12`;
+        metaEl.className = 'text-xs font-semibold text-amber-600 mt-1';
+      }
+
+      document.getElementById('report-total-cost').textContent = formatCurrency(totalCost);
+      document.getElementById('report-cost-breakdown').textContent = `Papel: ${formatCurrency(paper)} · Tóner: ${formatCurrency(toner)}`;
+
+      // Top 3 Causas
+      const top3 = [...agg.causes].sort((a, b) => b.votes - a.votes).slice(0, 3);
+      const top3List = document.getElementById('report-top3-list');
+      if (totalVoters === 0) {
+        top3List.innerHTML = `<li class="text-slate-500 italic">Aún no hay votos registrados.</li>`;
+      } else {
+        top3List.innerHTML = top3.map((c, idx) => `
+          <li class="bg-white border border-amber-200 rounded-xl p-3 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="w-6 h-6 rounded-full bg-amber-500 text-slate-950 font-black text-xs flex items-center justify-center shrink-0">${idx + 1}</span>
+              <span class="font-bold text-slate-800">${escapeHTML(c.text)}</span>
+            </div>
+            <span class="text-xs font-extrabold text-amber-900 bg-amber-100 px-2.5 py-1 rounded-lg shrink-0">${c.votes} votos</span>
+          </li>
+        `).join('');
+      }
+
+      // Frases recibidas
+      document.getElementById('participant-quote').value = state.selectedQuote || '';
+      const chipsContainer = document.getElementById('submitted-quotes-chips');
+      chipsContainer.innerHTML = agg.quotes.map(q => `
+        <button type="button" onclick="pickQuote('${escapeAttr(q.text)}')" class="text-[11px] bg-white hover:bg-sky-100 text-slate-700 border border-sky-200 px-2.5 py-1 rounded-lg transition cursor-pointer">
+          "${escapeHTML(truncateText(q.text, 45))}" — <strong>${escapeHTML(q.author)}</strong>
+        </button>
+      `).join('');
+    }
+
+    async function pickQuote(text) {
+      state.selectedQuote = text;
+      document.getElementById('participant-quote').value = text;
+      saveLocalState();
+      await pushMetaToCloud();
+    }
+
+    async function saveQuote() {
+      state.selectedQuote = document.getElementById('participant-quote').value;
+      saveLocalState();
+      await pushMetaToCloud();
+    }
+
+    function copySummaryToClipboard() {
+      const agg = getAggregatedData();
+      const totalCost = (Number(state.paperCost) || 0) + (Number(state.tonerCost) || 0);
+      const top3 = [...agg.causes].sort((a, b) => b.votes - a.votes).slice(0, 3);
+      const quote = (state.selectedQuote || '').trim() || '[Pendiente frase de participante]';
+
+      const summary = `ACTIVIDAD 1 · TALLER DE CAUSAS (SEMANA 3)
+Asistentes reales: ${agg.totalVoters} participantes (Meta: 12 / 30% del personal)
+Costo mensual calculado (papel y tóner): ${formatCurrency(totalCost)}
+
+3 CAUSAS PRINCIPALES (ÁRBOL DE PROBLEMAS):
+1. ${top3[0]?.text || '-'} (${top3[0]?.votes || 0} votos)
+2. ${top3[1]?.text || '-'} (${top3[1]?.votes || 0} votos)
+3. ${top3[2]?.text || '-'} (${top3[2]?.votes || 0} votos)
+
+Frase destacada: "${quote}"`;
+
+      const ta = document.createElement('textarea');
+      ta.value = summary;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('¡Resultados copiados al portapapeles!');
+    }
+
+    // ===================================================================
+    // MODALES: NUBE, CALCULADORA DE COSTOS Y REINICIO
+    // ===================================================================
+    function openCloudModal() {
+      document.getElementById('cloud-url-input').value = cloudUrl;
+      updateShareableLinkOutput();
+      const m = document.getElementById('cloud-modal');
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+
+    function closeCloudModal() {
+      const m = document.getElementById('cloud-modal');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    function updateShareableLinkOutput() {
+      const baseUrl = window.location.origin + window.location.pathname;
+      const finalLink = cloudUrl ? `${baseUrl}?db=${encodeURIComponent(cloudUrl)}` : baseUrl;
+      document.getElementById('shareable-url-output').value = finalLink;
+    }
+
+    async function saveCloudConfig() {
+      const raw = document.getElementById('cloud-url-input').value;
+      cloudUrl = normalizeCloudUrl(raw);
+      localStorage.setItem(CLOUD_URL_KEY, cloudUrl);
+      updateCloudBadgeUI();
+      updateShareableLinkOutput();
+      startPollingIfNeeded();
+      if (cloudUrl) {
+        await pullFromCloud(false);
+      }
+    }
+
+    function disconnectCloud() {
+      cloudUrl = '';
+      localStorage.removeItem(CLOUD_URL_KEY);
+      document.getElementById('cloud-url-input').value = '';
+      updateCloudBadgeUI();
+      updateShareableLinkOutput();
+      startPollingIfNeeded();
+      showToast('Cambiado a Modo Local.');
+    }
+
+    function copyShareableLink() {
+      const input = document.getElementById('shareable-url-output');
+      input.select();
+      document.execCommand('copy');
+      showToast('¡Enlace listo copiado! Compártelo con tu equipo.');
+    }
+
+    function updateCloudBadgeUI() {
+      const dot = document.getElementById('cloud-status-dot');
+      const txt = document.getElementById('cloud-status-text');
+      const badge = document.getElementById('cloud-status-badge');
+      if (cloudUrl) {
+        dot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-ping';
+        txt.textContent = 'En Vivo (Nube conectada)';
+        badge.className = 'bg-emerald-500/25 hover:bg-emerald-500/35 border border-emerald-300/40 text-emerald-100 text-[11px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 transition cursor-pointer';
+      } else {
+        dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+        txt.textContent = 'Modo Local (Conectar nube)';
+        badge.className = 'bg-amber-500/20 hover:bg-amber-500/30 border border-amber-300/40 text-amber-200 text-[11px] font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 transition cursor-pointer';
+      }
+    }
+
+    function openCostModal() {
+      document.getElementById('input-paper-cost').value = state.paperCost || '';
+      document.getElementById('input-toner-cost').value = state.tonerCost || '';
+      updateModalPreview();
+      const m = document.getElementById('cost-modal');
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+
+    function closeCostModal() {
+      const m = document.getElementById('cost-modal');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    function updateModalPreview() {
+      const p = Number(document.getElementById('input-paper-cost').value) || 0;
+      const t = Number(document.getElementById('input-toner-cost').value) || 0;
+      document.getElementById('modal-cost-preview').textContent = formatCurrency(p + t);
+    }
+
+    async function saveCostData() {
+      state.paperCost = Number(document.getElementById('input-paper-cost').value) || 0;
+      state.tonerCost = Number(document.getElementById('input-toner-cost').value) || 0;
+      saveLocalState();
+      updateAllUI();
+      closeCostModal();
+      await pushMetaToCloud();
+      showToast('Costo grabado en el tronco del árbol.');
+    }
+
+    function openResetModal() {
+      const m = document.getElementById('reset-modal');
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+
+    function closeResetModal() {
+      const m = document.getElementById('reset-modal');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    async function confirmResetAll() {
+      state = {
+        paperCost: 0,
+        tonerCost: 0,
+        selectedQuote: '',
+        votesList: [],
+        customCausesPool: []
+      };
+      saveLocalState();
+      if (cloudUrl && isFirebaseUrl(cloudUrl)) {
+        try {
+          await fetch(`${cloudUrl}/taller_arbol_papel.json`, { method: 'DELETE' });
+        } catch (e) { console.warn(e); }
+      }
+      resetVoteFormForNextPerson();
+      updateAllUI();
+      closeResetModal();
+      showToast('Taller reiniciado desde cero.');
+    }
+
+    // Simular votos de 12 compañeros para ensayar el árbol gráfico
+    function simulateDemoData() {
+      const demoVotes = [
+        { name: 'Camila R.', causes: ['c1', 'c3'], effects: ['e1', 'e3'], quote: 'Imprimimos por si acaso, pero nunca volvemos a mirar esas hojas.' },
+        { name: 'Andrés G.', causes: ['c1', 'c2', 'c3'], effects: ['e1', 'e2'], quote: '' },
+        { name: 'Diana P.', causes: ['c2', 'c4'], effects: ['e1', 'e3', 'e6'], quote: 'Revisar textos largos en papel me cansa menos la vista, pero gasto mucho.' },
+        { name: 'Carlos M.', causes: ['c1', 'c3'], effects: ['e1', 'e5'], quote: '' },
+        { name: 'Juliana T.', causes: ['c1', 'c2'], effects: ['e2', 'e3'], quote: '' },
+        { name: 'Felipe S.', causes: ['c3', 'c5'], effects: ['e1', 'e5'], quote: 'A veces se van 10 hojas mal configuradas y quedan ahí.' },
+        { name: 'Natalia V.', causes: ['c1', 'c2', 'c3'], effects: ['e1', 'e2', 'e3'], quote: '' },
+        { name: 'Jorge L.', causes: ['c1', 'c4'], effects: ['e1', 'e4'], quote: '' },
+        { name: 'Sofía H.', causes: ['c2', 'c3'], effects: ['e1', 'e3'], quote: '' },
+        { name: 'Mateo D.', causes: ['c1', 'c6'], effects: ['e2', 'e3'], quote: '' },
+        { name: 'Valentina C.', causes: ['c1', 'c2', 'c3'], effects: ['e1', 'e3'], quote: '' },
+        { name: 'Luis F.', causes: ['c1', 'c3'], effects: ['e1', 'e2'], quote: '' }
+      ];
+
+      state.paperCost = 135000;
+      state.tonerCost = 290000;
+      state.votesList = demoVotes.map((d, i) => ({
+        id: 'demo_' + i,
+        name: d.name,
+        causes: d.causes,
+        effects: d.effects,
+        quote: d.quote,
+        ts: Date.now() + i
+      }));
+      state.selectedQuote = demoVotes[0].quote;
+
+      saveLocalState();
+      updateAllUI();
+      switchTab('tree');
+      showToast('Simulación cargada: mira cómo crecieron las hojas y raíces.');
+    }
+
+    // Navegación y Modo Foto
+    function switchTab(tabName) {
+      ['vote', 'tree', 'report'].forEach(v => {
+        const view = document.getElementById(`view-${v}`);
+        const btn = document.getElementById(`tab-btn-${v}`);
+        if (v === tabName) {
+          view.classList.remove('hidden');
+          btn.classList.add('bg-white', 'text-forest-900', 'shadow');
+          btn.classList.remove('text-white/90', 'hover:bg-white/10');
+        } else {
+          view.classList.add('hidden');
+          btn.classList.remove('bg-white', 'text-forest-900', 'shadow');
+          btn.classList.add('text-white/90', 'hover:bg-white/10');
+        }
+      });
+      if (tabName === 'tree') renderGraphicalTree();
+      if (tabName === 'report') renderReport();
+    }
+
+    function togglePhotoMode(enable) {
+      if (enable) {
+        switchTab('tree');
+        document.body.classList.add('photo-mode');
+        showToast('Modo Foto activado: toma tu captura de pantalla.');
+      } else {
+        document.body.classList.remove('photo-mode');
+      }
+    }
+
+    function updateAllUI() {
+      const agg = getAggregatedData();
+      const totalCost = (Number(state.paperCost) || 0) + (Number(state.tonerCost) || 0);
+      document.getElementById('header-votes-count').textContent = agg.totalVoters;
+      document.getElementById('header-total-cost').textContent = formatCurrency(totalCost);
+
+      renderVotingCards();
+      renderGraphicalTree();
+      renderReport();
+    }
+
+    // Utilidades
+    function formatCurrency(val) {
+      return '$' + (Number(val) || 0).toLocaleString('es-CO');
+    }
+
+    function truncateText(str, max) {
+      if (!str) return '';
+      return str.length > max ? str.slice(0, max - 1) + '…' : str;
+    }
+
+    function escapeHTML(str) {
+      return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function escapeXML(str) {
+      return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+    }
+
+    function escapeAttr(str) {
+      return String(str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    function showToast(msg, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const el = document.createElement('div');
+      el.className = `${type === 'success' ? 'bg-forest-900 border-forest-600' : 'bg-amber-600 border-amber-400'} text-white border px-4 py-3 rounded-xl shadow-xl text-xs sm:text-sm font-bold flex items-center gap-2 animate-fade-in pointer-events-auto`;
+      el.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check text-emerald-300' : 'fa-circle-info'}"></i><span>${msg}</span>`;
+      container.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transition = 'opacity 0.3s';
+        setTimeout(() => el.remove(), 300);
+      }, 3000);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initCloudConfig();
+      loadInitialData();
+    });
+  </script>
+</body>
+</html>
